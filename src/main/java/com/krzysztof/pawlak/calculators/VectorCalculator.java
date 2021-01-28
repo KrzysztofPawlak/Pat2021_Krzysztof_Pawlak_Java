@@ -1,5 +1,6 @@
 package com.krzysztof.pawlak.calculators;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -20,9 +21,9 @@ public class VectorCalculator {
                 .collect(Collectors.toCollection(Vector::new));
     }
 
-    public Vector subtract(Vector vector, Vector vector2) {
+    public Vector<BigDecimal> subtract(Vector<BigDecimal> vector, Vector<BigDecimal> vector2) {
         return IntStream.range(0, vector.size())
-                .mapToObj(position -> (double) vector.get(position) - (double) vector2.get(position))
+                .mapToObj(position -> vector.get(position).subtract(vector2.get(position)))
                 .collect(Collectors.toCollection(Vector::new));
     }
 }
