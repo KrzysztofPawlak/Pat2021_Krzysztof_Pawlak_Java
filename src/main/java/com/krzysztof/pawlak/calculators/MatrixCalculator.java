@@ -1,7 +1,5 @@
 package com.krzysztof.pawlak.calculators;
 
-import com.krzysztof.pawlak.models.Matrix;
-
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Vector;
@@ -17,13 +15,19 @@ public class MatrixCalculator {
                 .collect(Collectors.toCollection(Vector::new));
     }
 
-    public Matrix add(Matrix matrix, Matrix matrix2) {
-        Matrix v = new Matrix();
-        return v;
+    public BigDecimal[][] add(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
+        return IntStream.range(0, matrix.length)
+                .mapToObj(rowIndex -> IntStream.range(0, matrix[rowIndex].length)
+                        .mapToObj(columnIndex -> matrix[rowIndex][columnIndex].add(matrix2[rowIndex][columnIndex]))
+                        .toArray(BigDecimal[]::new))
+                .toArray(BigDecimal[][]::new);
     }
 
-    public Matrix subtract(Matrix matrix, Matrix matrix2) {
-        Matrix v = new Matrix();
-        return v;
+    public BigDecimal[][] subtract(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
+        return IntStream.range(0, matrix.length)
+                .mapToObj(rowIndex -> IntStream.range(0, matrix[rowIndex].length)
+                        .mapToObj(columnIndex -> matrix[rowIndex][columnIndex].subtract(matrix2[rowIndex][columnIndex]))
+                        .toArray(BigDecimal[]::new))
+                .toArray(BigDecimal[][]::new);
     }
 }

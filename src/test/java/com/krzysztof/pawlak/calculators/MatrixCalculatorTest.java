@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -27,10 +28,22 @@ class MatrixCalculatorTest {
     }
 
     @Test
-    void add() {
+    void addIntegers() {
+        BigDecimal[][] matrix1 = {{BigDecimal.valueOf(4), BigDecimal.valueOf(8)}, {BigDecimal.valueOf(3), BigDecimal.valueOf(7)}};
+        BigDecimal[][] matrix2 = {{BigDecimal.valueOf(1), BigDecimal.valueOf(0)}, {BigDecimal.valueOf(5), BigDecimal.valueOf(2)}};
+        BigDecimal[][] expected = {{BigDecimal.valueOf(5), BigDecimal.valueOf(8)}, {BigDecimal.valueOf(8), BigDecimal.valueOf(9)}};
+        BigDecimal[][] result = matrixCalculator.add(matrix1, matrix2);
+        assertTrue(Arrays.equals(expected[0], result[0]));
+        assertTrue(Arrays.equals(expected[1], result[1]));
     }
 
     @Test
-    void subtract() {
+    void subtractIntegers() {
+        BigDecimal[][] matrix1 = {{BigDecimal.valueOf(1), BigDecimal.valueOf(2)}, {BigDecimal.valueOf(3), BigDecimal.valueOf(4)}};
+        BigDecimal[][] matrix2 = {{BigDecimal.valueOf(1), BigDecimal.valueOf(3)}, {BigDecimal.valueOf(5), BigDecimal.valueOf(5)}};
+        BigDecimal[][] expected = {{BigDecimal.valueOf(0), BigDecimal.valueOf(-1)}, {BigDecimal.valueOf(-2), BigDecimal.valueOf(-1)}};
+        BigDecimal[][] result = matrixCalculator.subtract(matrix1, matrix2);
+        assertTrue(Arrays.equals(expected[0], result[0]));
+        assertTrue(Arrays.equals(expected[1], result[1]));
     }
 }
