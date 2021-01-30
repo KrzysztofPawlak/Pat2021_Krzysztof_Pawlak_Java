@@ -1,28 +1,31 @@
 package com.krzysztof.pawlak.calculators;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+
 public class RealNumbersCalculator {
 
-    public double add(double number, double number2) {
-        return 0.0;
+    public BigDecimal add(BigDecimal number, BigDecimal number2) {
+        return number.add(number2);
     }
 
-    public double subtract(double number, double number2) {
-        return 0.0;
+    public BigDecimal subtract(BigDecimal number, BigDecimal number2) {
+        return number.subtract(number2);
     }
 
-    public double multiply(double number, double number2) {
-        return 0.0;
+    public BigDecimal multiply(BigDecimal number, BigDecimal number2) {
+        return number.multiply(number2);
     }
 
-    public double divide(double number, double number2) {
-        return 0.0;
+    public BigDecimal divide(BigDecimal number, BigDecimal number2) {
+        return number.divide(number2);
     }
 
-    public double exp(double number) {
-        return 0.0;
+    public BigDecimal exp(BigDecimal number, int exponent) {
+        return number.pow(exponent);
     }
 
-    public double sqrt(double number) {
-        return 0.0;
+    public BigDecimal sqrt(BigDecimal number) {
+        return number.sqrt(new MathContext(10));
     }
 }
