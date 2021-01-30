@@ -41,4 +41,11 @@ public class MatrixCalculator {
                         .toArray(BigDecimal[]::new))
                 .toArray(BigDecimal[][]::new);
     }
+
+    public BigDecimal[][] multiply(BigDecimal[][] matrix, BigDecimal number) {
+        return Arrays.stream(matrix).map(row ->
+                Arrays.stream(row).map(value -> value.multiply(number))
+                        .toArray(BigDecimal[]::new))
+                .toArray(BigDecimal[][]::new);
+    }
 }

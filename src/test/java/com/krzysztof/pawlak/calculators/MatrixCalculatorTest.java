@@ -53,7 +53,16 @@ class MatrixCalculatorTest {
         BigDecimal[][] matrix2 = {{BigDecimal.valueOf(5), BigDecimal.valueOf(6)}, {BigDecimal.valueOf(0), BigDecimal.valueOf(7)}};
         BigDecimal[][] expected = {{BigDecimal.valueOf(5), BigDecimal.valueOf(20)}, {BigDecimal.valueOf(15), BigDecimal.valueOf(46)}};
         BigDecimal[][] result = matrixCalculator.multiply(matrix1, matrix2);
-        System.out.println(Arrays.deepToString(result));
+        assertTrue(Arrays.equals(expected[0], result[0]));
+        assertTrue(Arrays.equals(expected[1], result[1]));
+    }
+
+    @Test
+    void multiplyMatrixAndNumberIntegers() {
+        BigDecimal[][] matrix = {{BigDecimal.valueOf(1), BigDecimal.valueOf(2)}, {BigDecimal.valueOf(3), BigDecimal.valueOf(4)}};
+        BigDecimal number = BigDecimal.valueOf(3);
+        BigDecimal[][] expected = {{BigDecimal.valueOf(3), BigDecimal.valueOf(6)}, {BigDecimal.valueOf(9), BigDecimal.valueOf(12)}};
+        BigDecimal[][] result = matrixCalculator.multiply(matrix, number);
         assertTrue(Arrays.equals(expected[0], result[0]));
         assertTrue(Arrays.equals(expected[1], result[1]));
     }
