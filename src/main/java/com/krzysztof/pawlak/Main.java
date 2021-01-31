@@ -1,25 +1,29 @@
 package com.krzysztof.pawlak;
 
-import com.krzysztof.pawlak.models.Matrix;
-
-import java.math.BigDecimal;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        String number = "1.21";
-        System.out.println("vector: [1 2 3 4]");
-        System.out.println("matrix: [1 2 3; 4 5 6; 7 8 10]");
+//        BigDecimal[][] matrix = {{BigDecimal.valueOf(1), BigDecimal.valueOf(2)}, {BigDecimal.valueOf(3), BigDecimal.valueOf(4)}};
+//        Matrix matrixTest = new Matrix();
+//        matrixTest.display(matrix);
 
-        BigDecimal[][] matrix = {{BigDecimal.valueOf(1), BigDecimal.valueOf(2)}, {BigDecimal.valueOf(3), BigDecimal.valueOf(4)}};
-        Matrix matrixTest = new Matrix();
-        matrixTest.display(matrix);
+        var reader = new BufferedReader(new InputStreamReader(System.in));
+        var inputParse = new InputParse();
+        var application = new Application(inputParse);
+        String input;
+        System.out.println("type some data");
 
-        try {
-            Double.parseDouble(number);
-        } catch (NumberFormatException e) {
-            System.out.println(e);
+        while (true) {
+            input = reader.readLine();
+            if (input.equals("q!")) {
+                break;
+            }
+            application.execute(input);
         }
     }
 }
