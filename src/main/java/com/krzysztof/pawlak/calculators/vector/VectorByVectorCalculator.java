@@ -1,19 +1,14 @@
-package com.krzysztof.pawlak.calculators;
+package com.krzysztof.pawlak.calculators.vector;
+
+import com.krzysztof.pawlak.calculators.Suggestive;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-
-public class VectorCalculator {
-
-    public Vector multiply(Vector vector, double number) {
-        return Arrays.stream(vector.toArray())
-                .map(e -> (double) e * number)
-                .collect(Collectors.toCollection(Vector::new));
-    }
+public class VectorByVectorCalculator implements Suggestive {
 
     public Vector add(Vector vector, Vector vector2) {
         return IntStream.range(0, vector.size())
@@ -25,5 +20,10 @@ public class VectorCalculator {
         return IntStream.range(0, vector.size())
                 .mapToObj(position -> vector.get(position).subtract(vector2.get(position)))
                 .collect(Collectors.toCollection(Vector::new));
+    }
+
+    @Override
+    public List<String> suggest() {
+        return List.of("add", "subtract");
     }
 }

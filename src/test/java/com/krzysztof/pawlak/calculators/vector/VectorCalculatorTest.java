@@ -1,4 +1,4 @@
-package com.krzysztof.pawlak.calculators;
+package com.krzysztof.pawlak.calculators.vector;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,18 +11,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class VectorCalculatorTest {
 
-    private VectorCalculator vectorCalculator;
+    private VectorByVectorCalculator vectorByVectorCalculator;
+    private VectorByNumberCalculator vectorByNumberCalculator;
 
     @BeforeEach
     void setUp() {
-        vectorCalculator = new VectorCalculator();
+        vectorByVectorCalculator = new VectorByVectorCalculator();
+        vectorByNumberCalculator = new VectorByNumberCalculator();
     }
 
     @Test
     void multiply() {
         var vector = new Vector(List.of(1.2, 2.1));
         var expected = new Vector(List.of(2.4, 4.2));
-        assertEquals(expected, vectorCalculator.multiply(vector, 2));
+        assertEquals(expected, vectorByNumberCalculator.multiply(vector, 2));
     }
 
     @Test
@@ -30,7 +32,7 @@ class VectorCalculatorTest {
         var vector = new Vector(List.of(1.2, 2.1));
         var vector2 = new Vector(List.of(2.3, 1.6));
         var expected = new Vector(List.of(3.5, 3.7));
-        assertEquals(expected, vectorCalculator.add(vector, vector2));
+        assertEquals(expected, vectorByVectorCalculator.add(vector, vector2));
     }
 
     @Test
@@ -38,6 +40,6 @@ class VectorCalculatorTest {
         var vector = new Vector(List.of(BigDecimal.valueOf(8.2), BigDecimal.valueOf(6.1)));
         var vector2 = new Vector(List.of(BigDecimal.valueOf(4.3), BigDecimal.valueOf(2.6)));
         var expected = new Vector(List.of(BigDecimal.valueOf(3.9), BigDecimal.valueOf(3.5)));
-        assertEquals(expected, vectorCalculator.subtract(vector, vector2));
+        assertEquals(expected, vectorByVectorCalculator.subtract(vector, vector2));
     }
 }

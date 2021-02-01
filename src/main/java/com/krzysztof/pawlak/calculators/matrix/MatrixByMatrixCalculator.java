@@ -1,20 +1,13 @@
-package com.krzysztof.pawlak.calculators;
+package com.krzysztof.pawlak.calculators.matrix;
+
+import com.krzysztof.pawlak.calculators.Suggestive;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Vector;
-import java.util.stream.Collectors;
+import java.util.List;
 import java.util.stream.IntStream;
 
-public class MatrixCalculator {
-
-    public Vector<BigDecimal> multiply(double[][] matrix, Vector<BigDecimal> vector) {
-        return Arrays.stream(matrix).map(row ->
-                IntStream.range(0, row.length)
-                        .mapToObj(indexColumn -> BigDecimal.valueOf(row[indexColumn]).multiply(vector.get(indexColumn)))
-                        .reduce(BigDecimal.ZERO, BigDecimal::add))
-                .collect(Collectors.toCollection(Vector::new));
-    }
+public class MatrixByMatrixCalculator implements Suggestive {
 
     public BigDecimal[][] add(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
         return IntStream.range(0, matrix.length)
@@ -42,10 +35,8 @@ public class MatrixCalculator {
                 .toArray(BigDecimal[][]::new);
     }
 
-    public BigDecimal[][] multiply(BigDecimal[][] matrix, BigDecimal number) {
-        return Arrays.stream(matrix).map(row ->
-                Arrays.stream(row).map(value -> value.multiply(number))
-                        .toArray(BigDecimal[]::new))
-                .toArray(BigDecimal[][]::new);
+    @Override
+    public List<String> suggest() {
+        return List.of("add", "subtract", "multiply");
     }
 }
