@@ -1,4 +1,4 @@
-package com.krzysztof.pawlak;
+package com.krzysztof.pawlak.tools;
 
 import com.krzysztof.pawlak.calculators.matrix.MatrixByMatrixCalculator;
 import com.krzysztof.pawlak.calculators.matrix.MatrixByNumberCalculator;
@@ -29,7 +29,7 @@ public class Suggester {
             return realNumbersCalculator.suggest();
         }
         var value2 = deque.peekLast();
-        if (value.getInputType() == InputType.NUMBER && value.getInputType() == InputType.NUMBER) {
+        if (value.getInputType() == InputType.NUMBER && value2.getInputType() == InputType.NUMBER) {
             return realNumbersCalculator.suggest();
         }
         if (value.getInputType() == InputType.MATRIX && value2.getInputType() == InputType.MATRIX) {
@@ -54,6 +54,7 @@ public class Suggester {
     }
 
     public void print(List<String> list) {
+        System.out.println("[options]");
         IntStream.range(0, list.size()).forEach(index -> System.out.println(index + ". " + list.get(index)));
     }
 }

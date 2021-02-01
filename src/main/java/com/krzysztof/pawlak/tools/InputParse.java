@@ -1,4 +1,4 @@
-package com.krzysztof.pawlak;
+package com.krzysztof.pawlak.tools;
 
 import java.math.BigDecimal;
 import java.util.Vector;

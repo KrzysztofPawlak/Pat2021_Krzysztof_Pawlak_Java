@@ -1,6 +1,12 @@
 package com.krzysztof.pawlak;
 
+import com.krzysztof.pawlak.tools.CalculatorCoordinator;
+import com.krzysztof.pawlak.tools.HUD;
+import com.krzysztof.pawlak.models.Mode;
+import com.krzysztof.pawlak.models.InputType;
 import com.krzysztof.pawlak.models.ValueContainer;
+import com.krzysztof.pawlak.tools.InputParse;
+import com.krzysztof.pawlak.tools.Suggester;
 
 import javax.naming.OperationNotSupportedException;
 import java.math.BigDecimal;
@@ -14,23 +20,47 @@ public class Application {
     private final InputParse inputParse;
     private Deque<ValueContainer> deque;
     private Suggester suggester;
+    private HUD hud;
+    private Mode mode = Mode.INPUT;
+    private CalculatorCoordinator coordinator;
 
     public Application(InputParse inputParse) {
         this.inputParse = inputParse;
         this.deque = new ArrayDeque();
         this.suggester = new Suggester();
+        this.hud = new HUD();
+        this.coordinator = new CalculatorCoordinator();
     }
 
     public void execute(String input) {
         try {
-            inputParse.isValidThrowException(input);
-            Object object = inputParse.parse(input);
-            ValueContainer valueContainer = new ValueContainer(object);
-            deque.addLast(valueContainer);
-            Object pop = deque.peek();
-            displayInputType(pop);
-            List<String> suggestions = suggester.suggest(deque);
-            suggester.print(suggestions);
+            if (deque.size() == 2 && mode == Mode.SELECTION) {
+                ValueContainer valueContainer = new ValueContainer(coordinator.calculate(deque, 0));
+                hud.printMem(valueContainer, deque.size());
+                System.out.println("Too much arguments. You need remove one or both of them.");
+            }
+            if (mode == Mode.INPUT) {
+                inputParse.isValidThrowException(input);
+                Object object = inputParse.parse(input);
+                ValueContainer valueContainer = new ValueContainer(object);
+                deque.addLast(valueContainer);
+                hud.printMem(valueContainer, deque.size());
+            }
+            if (deque.size() == 2) {
+                mode = Mode.SELECTION;
+                List<String> suggestions = suggester.suggest(deque);
+                suggester.print(suggestions);
+            }
+            if (deque.size() == 1 && deque.peek().getInputType() == InputType.NUMBER) {
+                List<String> suggestions = suggester.suggest(deque);
+                suggester.print(suggestions);
+            }
+
+            if (mode == Mode.SELECTION || mode == Mode.INPUT) {
+//                hud.showMemory(deque);
+//                List<String> suggestions = suggester.suggest(deque);
+//                suggester.print(suggestions);
+            }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return;

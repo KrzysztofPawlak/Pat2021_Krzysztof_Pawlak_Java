@@ -1,5 +1,6 @@
 package com.krzysztof.pawlak;
 
+import com.krzysztof.pawlak.tools.InputParse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
