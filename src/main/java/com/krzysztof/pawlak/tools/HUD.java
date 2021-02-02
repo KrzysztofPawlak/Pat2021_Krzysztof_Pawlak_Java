@@ -15,16 +15,16 @@ public class HUD {
             return;
         }
         var value = deque.peekFirst();
-        printMem(value, 1);
+        printElementFromMemory(value, 1);
         if (deque.size() == 1) {
             return;
         }
         var value2 = deque.peekLast();
-        printMem(value2, 2);
+        printElementFromMemory(value2, 2);
     }
 
-    public void printMem(ValueContainer value, int memoryNumber) {
-        System.out.println("[memory" + memoryNumber + "]");
+    public void printElementFromMemory(ValueContainer value, int memoryNumber) {
+        System.out.println("# memory" + memoryNumber + " #");
         show(value);
     }
 

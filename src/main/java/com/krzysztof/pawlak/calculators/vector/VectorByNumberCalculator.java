@@ -20,7 +20,7 @@ public class VectorByNumberCalculator implements Suggestive {
 
         static {
             for (Operations operation : Operations.values()) {
-                map.put(operation.value, map);
+                map.put(operation.value, operation);
             }
         }
 

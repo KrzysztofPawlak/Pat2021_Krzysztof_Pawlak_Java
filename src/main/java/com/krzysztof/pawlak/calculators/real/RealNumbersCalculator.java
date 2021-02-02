@@ -3,7 +3,6 @@ package com.krzysztof.pawlak.calculators.real;
 import com.krzysztof.pawlak.calculators.Suggestive;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +16,7 @@ public class RealNumbersCalculator implements Suggestive {
         SUBTRACT(1),
         MULTIPLY(2),
         DIVIDE(3),
-        EXP(4),
-        SQRT(5);
+        EXP(4);
 
         private static Map map = new HashMap<>();
         private final int value;
@@ -29,7 +27,7 @@ public class RealNumbersCalculator implements Suggestive {
 
         static {
             for (Operations operation : Operations.values()) {
-                map.put(operation.value, map);
+                map.put(operation.value, operation);
             }
         }
 
@@ -49,33 +47,35 @@ public class RealNumbersCalculator implements Suggestive {
                 return multiply(number, number2);
             case DIVIDE:
                 return divide(number, number2);
+            case EXP:
+                return exp(number, number2.intValue());
             default:
                 throw new UnsupportedOperationException();
         }
     }
 
     public BigDecimal add(BigDecimal number, BigDecimal number2) {
-        return number.add(number2);
+        return number.add(number2).stripTrailingZeros();
     }
 
     public BigDecimal subtract(BigDecimal number, BigDecimal number2) {
-        return number.subtract(number2);
+        return number.subtract(number2).stripTrailingZeros();
     }
 
     public BigDecimal multiply(BigDecimal number, BigDecimal number2) {
-        return number.multiply(number2);
+        return number.multiply(number2).stripTrailingZeros();
     }
 
+    // TODO: by zero
     public BigDecimal divide(BigDecimal number, BigDecimal number2) {
-        return number.divide(number2);
+        if (number2.compareTo(BigDecimal.ZERO) == 0) {
+            throw new IllegalArgumentException("cannot divide by zero!!!");
+        }
+        return number.divide(number2).stripTrailingZeros();
     }
 
     public BigDecimal exp(BigDecimal number, int exponent) {
-        return number.pow(exponent);
-    }
-
-    public BigDecimal sqrt(BigDecimal number) {
-        return number.sqrt(new MathContext(10));
+        return number.pow(exponent).stripTrailingZeros();
     }
 
     @Override

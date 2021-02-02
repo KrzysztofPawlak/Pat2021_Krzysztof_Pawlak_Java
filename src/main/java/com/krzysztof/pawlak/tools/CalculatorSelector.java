@@ -4,6 +4,7 @@ import com.krzysztof.pawlak.calculators.matrix.MatrixByMatrixCalculator;
 import com.krzysztof.pawlak.calculators.matrix.MatrixByNumberCalculator;
 import com.krzysztof.pawlak.calculators.matrix.MatrixByVectorCalculator;
 import com.krzysztof.pawlak.calculators.real.RealNumbersCalculator;
+import com.krzysztof.pawlak.calculators.real.SqrtCalculator;
 import com.krzysztof.pawlak.calculators.vector.VectorByNumberCalculator;
 import com.krzysztof.pawlak.calculators.vector.VectorByVectorCalculator;
 import com.krzysztof.pawlak.models.InputType;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.stream.IntStream;
 
-public class CalculatorCoordinator {
+public class CalculatorSelector {
 
     private static final MatrixByMatrixCalculator matrixByMatrixCalculator = new MatrixByMatrixCalculator();
     private static final MatrixByVectorCalculator matrixByVectorCalculator = new MatrixByVectorCalculator();
@@ -24,12 +25,13 @@ public class CalculatorCoordinator {
     private static final VectorByVectorCalculator vectorByVectorCalculator = new VectorByVectorCalculator();
     private static final VectorByNumberCalculator vectorByNumberCalculator = new VectorByNumberCalculator();
     private static final RealNumbersCalculator realNumbersCalculator = new RealNumbersCalculator();
+    private static final SqrtCalculator sqrtCalculator = new SqrtCalculator();
 
     public Object calculate(Deque<ValueContainer> deque, int selected) throws OperationNotSupportedException {
 
         var value = deque.peekFirst();
         if (deque.size() == 1 && value.getInputType() == InputType.NUMBER) {
-            return realNumbersCalculator.suggest();
+            return sqrtCalculator.calculate((BigDecimal) value.getValue(), selected);
         }
         var value2 = deque.peekLast();
         if (value.getInputType() == InputType.NUMBER && value2.getInputType() == InputType.NUMBER) {

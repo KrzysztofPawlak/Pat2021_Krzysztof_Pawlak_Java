@@ -1,19 +1,19 @@
-package com.krzysztof.pawlak.calculators.matrix;
+package com.krzysztof.pawlak.calculators.real;
 
 import com.krzysztof.pawlak.calculators.Suggestive;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.math.MathContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class MatrixByNumberCalculator implements Suggestive {
+public class SqrtCalculator implements Suggestive {
 
     private enum Operations {
-        MULTIPLY(0);
+        SQRT(0);
 
         private static Map map = new HashMap<>();
         private final int value;
@@ -33,21 +33,18 @@ public class MatrixByNumberCalculator implements Suggestive {
         }
     }
 
-    public BigDecimal[][] calculate(BigDecimal[][] matrix, BigDecimal number, int operation) {
+    public BigDecimal calculate(BigDecimal number, int operation) {
         var selectedOperation = Operations.valueOf(operation);
         switch (selectedOperation) {
-            case MULTIPLY:
-                return multiply(matrix, number);
+            case SQRT:
+                return sqrt(number);
             default:
                 throw new UnsupportedOperationException();
         }
     }
 
-    public BigDecimal[][] multiply(BigDecimal[][] matrix, BigDecimal number) {
-        return Arrays.stream(matrix).map(row ->
-                Arrays.stream(row).map(value -> value.multiply(number))
-                        .toArray(BigDecimal[]::new))
-                .toArray(BigDecimal[][]::new);
+    public BigDecimal sqrt(BigDecimal number) {
+        return number.sqrt(new MathContext(10));
     }
 
     @Override

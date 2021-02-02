@@ -2,5 +2,6 @@ package com.krzysztof.pawlak.models;
 
 public enum Mode {
     INPUT,
-    SELECTION
+    SELECTION,
+    OPTION_SELECTED
 }

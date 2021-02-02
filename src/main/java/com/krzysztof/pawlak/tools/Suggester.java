@@ -4,6 +4,7 @@ import com.krzysztof.pawlak.calculators.matrix.MatrixByMatrixCalculator;
 import com.krzysztof.pawlak.calculators.matrix.MatrixByNumberCalculator;
 import com.krzysztof.pawlak.calculators.matrix.MatrixByVectorCalculator;
 import com.krzysztof.pawlak.calculators.real.RealNumbersCalculator;
+import com.krzysztof.pawlak.calculators.real.SqrtCalculator;
 import com.krzysztof.pawlak.calculators.vector.VectorByNumberCalculator;
 import com.krzysztof.pawlak.calculators.vector.VectorByVectorCalculator;
 import com.krzysztof.pawlak.models.InputType;
@@ -22,11 +23,12 @@ public class Suggester {
     private static final VectorByVectorCalculator vectorByVectorCalculator = new VectorByVectorCalculator();
     private static final VectorByNumberCalculator vectorByNumberCalculator = new VectorByNumberCalculator();
     private static final RealNumbersCalculator realNumbersCalculator = new RealNumbersCalculator();
+    private static final SqrtCalculator sqrtCalculator = new SqrtCalculator();
 
     public List<String> suggest(Deque<ValueContainer> deque) throws OperationNotSupportedException {
         var value = deque.peekFirst();
         if (deque.size() == 1 && value.getInputType() == InputType.NUMBER) {
-            return realNumbersCalculator.suggest();
+            return sqrtCalculator.suggest();
         }
         var value2 = deque.peekLast();
         if (value.getInputType() == InputType.NUMBER && value2.getInputType() == InputType.NUMBER) {
@@ -54,7 +56,7 @@ public class Suggester {
     }
 
     public void print(List<String> list) {
-        System.out.println("[options]");
+        System.out.println("# options #");
         IntStream.range(0, list.size()).forEach(index -> System.out.println(index + ". " + list.get(index)));
     }
 }

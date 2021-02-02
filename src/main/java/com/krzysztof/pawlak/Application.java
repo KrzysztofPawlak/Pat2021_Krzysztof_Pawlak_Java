@@ -1,65 +1,46 @@
 package com.krzysztof.pawlak;
 
-import com.krzysztof.pawlak.tools.CalculatorCoordinator;
-import com.krzysztof.pawlak.tools.HUD;
-import com.krzysztof.pawlak.models.Mode;
+import com.krzysztof.pawlak.models.CalculationMode;
 import com.krzysztof.pawlak.models.InputType;
+import com.krzysztof.pawlak.models.Mode;
 import com.krzysztof.pawlak.models.ValueContainer;
+import com.krzysztof.pawlak.tools.CalculatorSelector;
+import com.krzysztof.pawlak.tools.HUD;
 import com.krzysztof.pawlak.tools.InputParse;
 import com.krzysztof.pawlak.tools.Suggester;
 
 import javax.naming.OperationNotSupportedException;
-import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
-import java.util.Vector;
 
 public class Application {
 
     private final InputParse inputParse;
-    private Deque<ValueContainer> deque;
-    private Suggester suggester;
-    private HUD hud;
+    private final Deque<ValueContainer> deque;
+    private final Suggester suggester;
+    private final HUD hud;
     private Mode mode = Mode.INPUT;
-    private CalculatorCoordinator coordinator;
+    private CalculationMode calculationMode = CalculationMode.NORMAL;
+    private final CalculatorSelector calculatorSelector;
+    private static final int MAX_MEMORY_SLOT = 2;
+    private static final int ELEMENTS_IN_MEMORY_FOR_EXTENDED_MODE = 1;
 
-    public Application(InputParse inputParse) {
-        this.inputParse = inputParse;
+    public Application() {
+        this.inputParse = new InputParse();
         this.deque = new ArrayDeque();
         this.suggester = new Suggester();
         this.hud = new HUD();
-        this.coordinator = new CalculatorCoordinator();
+        this.calculatorSelector = new CalculatorSelector();
     }
 
     public void execute(String input) {
         try {
-            if (deque.size() == 2 && mode == Mode.SELECTION) {
-                ValueContainer valueContainer = new ValueContainer(coordinator.calculate(deque, 0));
-                hud.printMem(valueContainer, deque.size());
-                System.out.println("Too much arguments. You need remove one or both of them.");
-            }
-            if (mode == Mode.INPUT) {
-                inputParse.isValidThrowException(input);
-                Object object = inputParse.parse(input);
-                ValueContainer valueContainer = new ValueContainer(object);
-                deque.addLast(valueContainer);
-                hud.printMem(valueContainer, deque.size());
-            }
-            if (deque.size() == 2) {
-                mode = Mode.SELECTION;
-                List<String> suggestions = suggester.suggest(deque);
-                suggester.print(suggestions);
-            }
-            if (deque.size() == 1 && deque.peek().getInputType() == InputType.NUMBER) {
-                List<String> suggestions = suggester.suggest(deque);
-                suggester.print(suggestions);
-            }
-
-            if (mode == Mode.SELECTION || mode == Mode.INPUT) {
-//                hud.showMemory(deque);
-//                List<String> suggestions = suggester.suggest(deque);
-//                suggester.print(suggestions);
+            shouldSwitchToExtendedMode(input);
+            if (calculationMode == CalculationMode.EXTENDED) {
+                handleExtendedMode(input);
+            } else {
+                handleNormalMode(input);
             }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -67,24 +48,78 @@ public class Application {
         } catch (OperationNotSupportedException e) {
             e.printStackTrace();
         }
-
-        // TODO
-        // inputParse.isValid(input);
-        // displayMessageIfNeeded();
-        // var currentValue = determineInputType();
-        // var previousValue = stack.peek();
-        // Operation operation = suggestOptions(stack);
-        // calculate(operation, stack);
-        // printResult();
     }
 
-    private void displayInputType(Object pop) {
-        if (pop instanceof BigDecimal) {
-            System.out.println("is big decimal");
-        } else if (pop instanceof Vector) {
-            System.out.println("is vector");
-        } else if (pop instanceof BigDecimal[][]) {
-            System.out.println("is matrix");
+    private void handleNormalMode(String input) throws OperationNotSupportedException {
+        if (mode == Mode.OPTION_SELECTED) {
+            int option = getOption(input);
+            var valueContainer = calculate(option);
+            hud.printElementFromMemory(valueContainer, deque.size());
+            mode = Mode.INPUT;
+            return;
         }
+        if (mode == Mode.INPUT) {
+            addDataToMemory(input);
+        }
+        if (deque.size() == MAX_MEMORY_SLOT) {
+            suggest();
+        }
+    }
+
+    private void handleExtendedMode(String input) throws OperationNotSupportedException {
+        if (mode == Mode.SELECTION) {
+            suggest();
+            return;
+        }
+        if (mode == Mode.OPTION_SELECTED) {
+            int option = getOption(input);
+            var valueContainer = calculate(option);
+            hud.printElementFromMemory(valueContainer, deque.size());
+            mode = Mode.INPUT;
+            calculationMode = CalculationMode.NORMAL;
+            return;
+        }
+        if (mode == Mode.INPUT) {
+            addDataToMemory(input);
+        }
+    }
+
+    private void suggest() throws OperationNotSupportedException {
+        List<String> suggestions = suggester.suggest(deque);
+        suggester.print(suggestions);
+        mode = Mode.OPTION_SELECTED;
+    }
+
+    private ValueContainer calculate(int option) throws OperationNotSupportedException {
+        var valueContainer = new ValueContainer(calculatorSelector.calculate(deque, option));
+        deque.clear();
+        deque.add(valueContainer);
+        return valueContainer;
+    }
+
+    private int getOption(String input) throws OperationNotSupportedException {
+        int option = Integer.parseInt(input);
+        if (option > suggester.suggest(deque).size()) {
+            throw new IllegalArgumentException();
+        }
+        return option;
+    }
+
+    private void addDataToMemory(String input) {
+        inputParse.isValidThrowException(input);
+        var object = inputParse.parse(input);
+        var valueContainer = new ValueContainer(object);
+        deque.addLast(valueContainer);
+        hud.printElementFromMemory(valueContainer, deque.size());
+    }
+
+    public boolean shouldSwitchToExtendedMode(String input) {
+        boolean isExtendedMode = deque.size() == ELEMENTS_IN_MEMORY_FOR_EXTENDED_MODE &&
+                deque.peek().getInputType() == InputType.NUMBER && input.equals("o");
+        if (isExtendedMode) {
+            calculationMode = CalculationMode.EXTENDED;
+            mode = Mode.SELECTION;
+        }
+        return isExtendedMode;
     }
 }

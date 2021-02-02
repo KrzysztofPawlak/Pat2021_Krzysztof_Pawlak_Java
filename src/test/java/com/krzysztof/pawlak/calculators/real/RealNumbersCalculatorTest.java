@@ -10,10 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class RealNumbersCalculatorTest {
 
     private RealNumbersCalculator realNumbersCalculator;
+    private SqrtCalculator sqrtCalculator;
 
     @BeforeEach
     void setUp() {
         realNumbersCalculator = new RealNumbersCalculator();
+        sqrtCalculator = new SqrtCalculator();
     }
 
     @Test
@@ -43,6 +45,6 @@ class RealNumbersCalculatorTest {
 
     @Test
     void sqrt() {
-        assertEquals(BigDecimal.valueOf(15), realNumbersCalculator.sqrt(BigDecimal.valueOf(225)));
+        assertEquals(BigDecimal.valueOf(15), sqrtCalculator.sqrt(BigDecimal.valueOf(225)));
     }
 }

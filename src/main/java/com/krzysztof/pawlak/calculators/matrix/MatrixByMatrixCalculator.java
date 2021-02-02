@@ -27,7 +27,7 @@ public class MatrixByMatrixCalculator implements Suggestive {
 
         static {
             for (Operations operation : Operations.values()) {
-                map.put(operation.value, map);
+                map.put(operation.value, operation);
             }
         }
 
