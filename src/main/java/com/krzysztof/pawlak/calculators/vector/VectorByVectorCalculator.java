@@ -36,7 +36,7 @@ public class VectorByVectorCalculator implements Suggestive {
     }
 
     public Vector calculate(Vector vector, Vector vector2, int operation) {
-        var selectedOperation = Operations.valueOf(operation);
+        final var selectedOperation = Operations.valueOf(operation);
         switch (selectedOperation) {
             case ADD:
                 return add(vector, vector2);

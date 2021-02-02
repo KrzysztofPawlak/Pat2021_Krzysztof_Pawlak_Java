@@ -32,7 +32,7 @@ public class MatrixByVectorCalculator implements Suggestive {
     }
 
     public BigDecimal[][] calculate(BigDecimal[][] matrix, Vector<BigDecimal> vector, int operation) {
-        var selectedOperation = Operations.valueOf(operation);
+        final var selectedOperation = Operations.valueOf(operation);
         switch (selectedOperation) {
             case MULTIPLY:
                 //return multiply(matrix, vector); // TODO

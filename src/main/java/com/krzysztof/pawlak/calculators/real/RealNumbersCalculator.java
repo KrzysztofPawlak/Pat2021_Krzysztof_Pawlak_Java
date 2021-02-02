@@ -37,7 +37,7 @@ public class RealNumbersCalculator implements Suggestive {
     }
 
     public BigDecimal calculate(BigDecimal number, BigDecimal number2, int operation) {
-        var selectedOperation = Operations.valueOf(operation);
+        final var selectedOperation = Operations.valueOf(operation);
         switch (selectedOperation) {
             case ADD:
                 return add(number, number2);

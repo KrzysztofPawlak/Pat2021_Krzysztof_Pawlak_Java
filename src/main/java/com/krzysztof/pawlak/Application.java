@@ -52,8 +52,8 @@ public class Application {
 
     private void handleNormalMode(String input) throws OperationNotSupportedException {
         if (mode == Mode.OPTION_SELECTED) {
-            int option = getOption(input);
-            var valueContainer = calculate(option);
+            final int option = getOption(input);
+            final var valueContainer = calculate(option);
             hud.printElementFromMemory(valueContainer, deque.size());
             mode = Mode.INPUT;
             return;
@@ -72,8 +72,8 @@ public class Application {
             return;
         }
         if (mode == Mode.OPTION_SELECTED) {
-            int option = getOption(input);
-            var valueContainer = calculate(option);
+            final int option = getOption(input);
+            final var valueContainer = calculate(option);
             hud.printElementFromMemory(valueContainer, deque.size());
             mode = Mode.INPUT;
             calculationMode = CalculationMode.NORMAL;
@@ -85,20 +85,20 @@ public class Application {
     }
 
     private void suggest() throws OperationNotSupportedException {
-        List<String> suggestions = suggester.suggest(deque);
+        final List<String> suggestions = suggester.suggest(deque);
         suggester.print(suggestions);
         mode = Mode.OPTION_SELECTED;
     }
 
     private ValueContainer calculate(int option) throws OperationNotSupportedException {
-        var valueContainer = new ValueContainer(calculatorSelector.calculate(deque, option));
+        final var valueContainer = new ValueContainer(calculatorSelector.calculate(deque, option));
         deque.clear();
         deque.add(valueContainer);
         return valueContainer;
     }
 
     private int getOption(String input) throws OperationNotSupportedException {
-        int option = Integer.parseInt(input);
+        final int option = Integer.parseInt(input);
         if (option > suggester.suggest(deque).size()) {
             throw new IllegalArgumentException();
         }
@@ -107,14 +107,14 @@ public class Application {
 
     private void addDataToMemory(String input) {
         inputParse.isValidThrowException(input);
-        var object = inputParse.parse(input);
-        var valueContainer = new ValueContainer(object);
+        final var object = inputParse.parse(input);
+        final var valueContainer = new ValueContainer(object);
         deque.addLast(valueContainer);
         hud.printElementFromMemory(valueContainer, deque.size());
     }
 
     public boolean shouldSwitchToExtendedMode(String input) {
-        boolean isExtendedMode = deque.size() == ELEMENTS_IN_MEMORY_FOR_EXTENDED_MODE &&
+        final boolean isExtendedMode = deque.size() == ELEMENTS_IN_MEMORY_FOR_EXTENDED_MODE &&
                 deque.peek().getInputType() == InputType.NUMBER && input.equals("o");
         if (isExtendedMode) {
             calculationMode = CalculationMode.EXTENDED;

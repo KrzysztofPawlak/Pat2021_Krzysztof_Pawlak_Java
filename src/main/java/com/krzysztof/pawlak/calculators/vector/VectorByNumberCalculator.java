@@ -30,7 +30,7 @@ public class VectorByNumberCalculator implements Suggestive {
     }
 
     public Vector calculate(Vector vector, double number, int operation) {
-        var selectedOperation = Operations.valueOf(operation);
+        final var selectedOperation = Operations.valueOf(operation);
         switch (selectedOperation) {
             case MULTIPLY:
                 return multiply(vector, number);

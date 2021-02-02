@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class ValueContainer {
 
-    private Object value;
+    private final Object value;
     private InputType inputType;
 
     public ValueContainer(Object value) {

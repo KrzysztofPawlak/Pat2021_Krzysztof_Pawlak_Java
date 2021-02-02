@@ -13,7 +13,7 @@ public class InputParse {
     // ;(?!]) - semicolon can occur if next char is not "]" (regex lookahead)
     static final String ALLOWED_CHARS = "-?[0-9]+\\.?[0-9]*|\\[(\\u0020?-?[0-9]+\\.?[0-9]*\\u0020?(;(?!]))?){2,}]";
 
-    public boolean isValid(String input) {
+    private boolean isValid(String input) {
         return input.matches(ALLOWED_CHARS);
     }
 
@@ -25,22 +25,19 @@ public class InputParse {
 
     public Object parse(String input) {
         try {
-            if (input.startsWith("[") && input.endsWith("]")) {
-                input = input.replace("[", "");
-                input = input.replace("]", "");
+            if (isIndicateToBeMatrixOrVector(input)) {
+                input = clearSquareBrackets(input);
                 if (!input.contains(";")) {
                     return parseToVectorRow(input);
                 }
-                String[] rows = input.split(";");
-                int rowsCount = rows.length;
-                int columnsCount = Arrays.stream(rows[0].split(" "))
-                        .filter(string -> !string.isEmpty())
-                        .toArray(String[]::new)
-                        .length;
-                if (columnsCount == 1) {
+                final String[] rows = input.split(";");
+                final String[] firstRow = rows[0].split(" ");
+                final int rowsCount = rows.length;
+                final int columnsCount = clearEmptyElements(firstRow).length;
+                if (isRowOrColumnVector(columnsCount)) {
                     return parseToVectorColumn(rows);
                 }
-                if (rowsCount > 1 && columnsCount > 1) {
+                if (isMatrix(rowsCount, columnsCount)) {
                     return parseToMatrix(rows, columnsCount);
                 }
             }
@@ -51,10 +48,10 @@ public class InputParse {
     }
 
     private BigDecimal[][] parseToMatrix(String[] rows, int columns) {
-        BigDecimal[][] result = new BigDecimal[rows.length][columns];
+        final BigDecimal[][] result = new BigDecimal[rows.length][columns];
         for (int rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-            String[] valuesInRow = rows[rowIndex].split(" ");
-            String[] valuesNonEmpty = Arrays.stream(valuesInRow)
+            final String[] valuesInRow = rows[rowIndex].split(" ");
+            final String[] valuesNonEmpty = Arrays.stream(valuesInRow)
                     .filter(string -> !string.isEmpty())
                     .toArray(String[]::new);
             if (valuesNonEmpty.length != columns) {
@@ -68,10 +65,10 @@ public class InputParse {
     }
 
     private Vector<BigDecimal> parseToVectorColumn(String[] rows) {
-        Vector<BigDecimal> result = new Vector<>();
+        final Vector<BigDecimal> result = new Vector<>();
         for (String row : rows) {
-            String[] valuesInRow = row.split(" ");
-            if (valuesInRow.length != 1) {
+            final String[] valuesInRow = row.split(" ");
+            if (!isRowOrColumnVector(valuesInRow.length)) {
                 throw new IllegalArgumentException();
             }
             result.add(BigDecimal.valueOf(Double.parseDouble(valuesInRow[0])));
@@ -85,5 +82,29 @@ public class InputParse {
                 .map(Double::parseDouble)
                 .map(BigDecimal::new)
                 .collect(Collectors.toCollection(Vector::new));
+    }
+
+    private boolean isMatrix(int rowsCount, int columnsCount) {
+        final int minimalRowsAndColumns = 1;
+        return rowsCount > minimalRowsAndColumns && columnsCount > minimalRowsAndColumns;
+    }
+
+    private boolean isRowOrColumnVector(int size) {
+        final int minimalRowsOrColumns = 1;
+        return size == minimalRowsOrColumns;
+    }
+
+    private String clearSquareBrackets(String input) {
+        return input.replace("[", "").replace("]", "");
+    }
+
+    private boolean isIndicateToBeMatrixOrVector(String input) {
+        return input.startsWith("[") && input.endsWith("]");
+    }
+
+    private String[] clearEmptyElements(String[] input) {
+        return Arrays.stream(input)
+                .filter(string -> !string.isEmpty())
+                .toArray(String[]::new);
     }
 }

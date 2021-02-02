@@ -37,7 +37,7 @@ public class MatrixByMatrixCalculator implements Suggestive {
     }
 
     public BigDecimal[][] calculate(BigDecimal[][] matrix, BigDecimal[][] matrix2, int operation) {
-        var selectedOperation = Operations.valueOf(operation);
+        final var selectedOperation = Operations.valueOf(operation);
         switch (selectedOperation) {
             case ADD:
                 return add(matrix, matrix2);

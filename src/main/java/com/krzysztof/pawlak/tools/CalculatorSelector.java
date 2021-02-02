@@ -13,9 +13,7 @@ import com.krzysztof.pawlak.models.ValueContainer;
 import javax.naming.OperationNotSupportedException;
 import java.math.BigDecimal;
 import java.util.Deque;
-import java.util.List;
 import java.util.Vector;
-import java.util.stream.IntStream;
 
 public class CalculatorSelector {
 
@@ -29,11 +27,11 @@ public class CalculatorSelector {
 
     public Object calculate(Deque<ValueContainer> deque, int selected) throws OperationNotSupportedException {
 
-        var value = deque.peekFirst();
+        final var value = deque.peekFirst();
         if (deque.size() == 1 && value.getInputType() == InputType.NUMBER) {
             return sqrtCalculator.calculate((BigDecimal) value.getValue(), selected);
         }
-        var value2 = deque.peekLast();
+        final var value2 = deque.peekLast();
         if (value.getInputType() == InputType.NUMBER && value2.getInputType() == InputType.NUMBER) {
             return realNumbersCalculator.calculate((BigDecimal) value.getValue(),
                     (BigDecimal) value2.getValue(), selected);
@@ -75,10 +73,5 @@ public class CalculatorSelector {
                     (double) value.getValue(), selected);
         }
         throw new OperationNotSupportedException();
-    }
-
-    public void print(List<String> list) {
-        System.out.println("[options]");
-        IntStream.range(0, list.size()).forEach(index -> System.out.println(index + ". " + list.get(index)));
     }
 }
