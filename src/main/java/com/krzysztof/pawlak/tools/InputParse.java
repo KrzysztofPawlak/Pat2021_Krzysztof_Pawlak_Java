@@ -1,6 +1,7 @@
 package com.krzysztof.pawlak.tools;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,7 +33,10 @@ public class InputParse {
                 }
                 String[] rows = input.split(";");
                 int rowsCount = rows.length;
-                int columnsCount = rows[0].split(" ").length;
+                int columnsCount = Arrays.stream(rows[0].split(" "))
+                        .filter(string -> !string.isEmpty())
+                        .toArray(String[]::new)
+                        .length;
                 if (columnsCount == 1) {
                     return parseToVectorColumn(rows);
                 }
@@ -50,11 +54,14 @@ public class InputParse {
         BigDecimal[][] result = new BigDecimal[rows.length][columns];
         for (int rowIndex = 0; rowIndex < rows.length; rowIndex++) {
             String[] valuesInRow = rows[rowIndex].split(" ");
-            if (valuesInRow.length != columns) {
+            String[] valuesNonEmpty = Arrays.stream(valuesInRow)
+                    .filter(string -> !string.isEmpty())
+                    .toArray(String[]::new);
+            if (valuesNonEmpty.length != columns) {
                 throw new IllegalArgumentException();
             }
-            for (int columnIndex = 0; columnIndex < valuesInRow.length; columnIndex++) {
-                result[rowIndex][columnIndex] = BigDecimal.valueOf(Double.parseDouble(valuesInRow[columnIndex]));
+            for (int columnIndex = 0; columnIndex < valuesNonEmpty.length; columnIndex++) {
+                result[rowIndex][columnIndex] = BigDecimal.valueOf(Double.parseDouble(valuesNonEmpty[columnIndex]));
             }
         }
         return result;
