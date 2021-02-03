@@ -2,6 +2,7 @@ package com.krzysztof.pawlak.calculators.vector;
 
 import com.krzysztof.pawlak.calculators.Suggestive;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,7 +30,7 @@ public class VectorByNumberCalculator implements Suggestive {
         }
     }
 
-    public Vector calculate(Vector vector, double number, int operation) {
+    public Vector calculate(Vector<BigDecimal> vector, BigDecimal number, int operation) {
         final var selectedOperation = Operations.valueOf(operation);
         switch (selectedOperation) {
             case MULTIPLY:
@@ -39,9 +40,9 @@ public class VectorByNumberCalculator implements Suggestive {
         }
     }
 
-    public Vector multiply(Vector vector, double number) {
-        return Arrays.stream(vector.toArray())
-                .map(e -> (double) e * number)
+    public Vector<BigDecimal> multiply(Vector<BigDecimal> vector, BigDecimal number) {
+        return Arrays.stream(vector.toArray(BigDecimal[]::new))
+                .map(vectorValue -> vectorValue.multiply(number))
                 .collect(Collectors.toCollection(Vector::new));
     }
 

@@ -35,7 +35,7 @@ public class VectorByVectorCalculator implements Suggestive {
         }
     }
 
-    public Vector calculate(Vector vector, Vector vector2, int operation) {
+    public Vector<BigDecimal> calculate(Vector<BigDecimal> vector, Vector<BigDecimal> vector2, int operation) {
         final var selectedOperation = Operations.valueOf(operation);
         switch (selectedOperation) {
             case ADD:
@@ -47,9 +47,9 @@ public class VectorByVectorCalculator implements Suggestive {
         }
     }
 
-    public Vector add(Vector vector, Vector vector2) {
+    public Vector<BigDecimal> add(Vector<BigDecimal> vector, Vector<BigDecimal> vector2) {
         return IntStream.range(0, vector.size())
-                .mapToObj(position -> (double) vector.get(position) + (double) vector2.get(position))
+                .mapToObj(position -> vector.get(position).add(vector2.get(position)))
                 .collect(Collectors.toCollection(Vector::new));
     }
 

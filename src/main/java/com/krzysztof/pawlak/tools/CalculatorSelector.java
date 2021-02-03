@@ -66,11 +66,11 @@ public class CalculatorSelector {
 
         if (value.getInputType() == InputType.VECTOR && value2.getInputType() == InputType.NUMBER) {
             return vectorByNumberCalculator.calculate((Vector<BigDecimal>) value.getValue(),
-                    (double) value2.getValue(), selected);
+                    (BigDecimal) value2.getValue(), selected);
         }
         if (value.getInputType() == InputType.NUMBER && value2.getInputType() == InputType.VECTOR) {
             return vectorByNumberCalculator.calculate((Vector<BigDecimal>) value2.getValue(),
-                    (double) value.getValue(), selected);
+                    (BigDecimal) value.getValue(), selected);
         }
         throw new OperationNotSupportedException();
     }

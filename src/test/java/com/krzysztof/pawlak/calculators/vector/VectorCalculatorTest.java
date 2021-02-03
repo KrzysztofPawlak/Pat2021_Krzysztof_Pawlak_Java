@@ -24,7 +24,7 @@ class VectorCalculatorTest {
     void multiply() {
         var vector = new Vector(List.of(1.2, 2.1));
         var expected = new Vector(List.of(2.4, 4.2));
-        assertEquals(expected, vectorByNumberCalculator.multiply(vector, 2));
+        assertEquals(expected, vectorByNumberCalculator.multiply(vector, BigDecimal.valueOf(2)));
     }
 
     @Test
