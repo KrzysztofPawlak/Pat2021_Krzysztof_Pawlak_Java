@@ -26,17 +26,29 @@ class MatrixCalculatorTest {
 
     @Test
     void multiplyMatrixAndVectorIntegers() {
-        double[][] matrix = {{3, 4}, {5, 5}};
+        BigDecimal[][] matrix = {
+                {BigDecimal.valueOf(3), BigDecimal.valueOf(4)},
+                {BigDecimal.valueOf(5), BigDecimal.valueOf(5)}
+        };
         var vector = new Vector(List.of(BigDecimal.valueOf(3), BigDecimal.valueOf(4)));
-        var expected = new Vector(List.of(BigDecimal.valueOf(25).setScale(1), BigDecimal.valueOf(35).setScale(1)));
+        var expected = new Vector(List.of(BigDecimal.valueOf(25).setScale(0), BigDecimal.valueOf(35).setScale(0)));
         assertEquals(expected, matrixByVectorCalculator.multiply(matrix, vector));
     }
 
     @Test
     void addIntegers() {
-        BigDecimal[][] matrix1 = {{BigDecimal.valueOf(4), BigDecimal.valueOf(8)}, {BigDecimal.valueOf(3), BigDecimal.valueOf(7)}};
-        BigDecimal[][] matrix2 = {{BigDecimal.valueOf(1), BigDecimal.valueOf(0)}, {BigDecimal.valueOf(5), BigDecimal.valueOf(2)}};
-        BigDecimal[][] expected = {{BigDecimal.valueOf(5), BigDecimal.valueOf(8)}, {BigDecimal.valueOf(8), BigDecimal.valueOf(9)}};
+        BigDecimal[][] matrix1 = {
+                {BigDecimal.valueOf(4), BigDecimal.valueOf(8)},
+                {BigDecimal.valueOf(3), BigDecimal.valueOf(7)}
+        };
+        BigDecimal[][] matrix2 = {
+                {BigDecimal.valueOf(1), BigDecimal.valueOf(0)},
+                {BigDecimal.valueOf(5), BigDecimal.valueOf(2)}
+        };
+        BigDecimal[][] expected = {
+                {BigDecimal.valueOf(5), BigDecimal.valueOf(8)},
+                {BigDecimal.valueOf(8), BigDecimal.valueOf(9)}
+        };
         BigDecimal[][] result = matrixByMatrixCalculator.add(matrix1, matrix2);
         assertTrue(Arrays.equals(expected[0], result[0]));
         assertTrue(Arrays.equals(expected[1], result[1]));
@@ -44,19 +56,57 @@ class MatrixCalculatorTest {
 
     @Test
     void subtractIntegers() {
-        BigDecimal[][] matrix1 = {{BigDecimal.valueOf(1), BigDecimal.valueOf(2)}, {BigDecimal.valueOf(3), BigDecimal.valueOf(4)}};
-        BigDecimal[][] matrix2 = {{BigDecimal.valueOf(1), BigDecimal.valueOf(3)}, {BigDecimal.valueOf(5), BigDecimal.valueOf(5)}};
-        BigDecimal[][] expected = {{BigDecimal.valueOf(0), BigDecimal.valueOf(-1)}, {BigDecimal.valueOf(-2), BigDecimal.valueOf(-1)}};
+        BigDecimal[][] matrix1 = {
+                {BigDecimal.valueOf(1), BigDecimal.valueOf(2)},
+                {BigDecimal.valueOf(3), BigDecimal.valueOf(4)}
+        };
+        BigDecimal[][] matrix2 = {
+                {BigDecimal.valueOf(1), BigDecimal.valueOf(3)},
+                {BigDecimal.valueOf(5), BigDecimal.valueOf(5)}
+        };
+        BigDecimal[][] expected = {
+                {BigDecimal.valueOf(0), BigDecimal.valueOf(-1)},
+                {BigDecimal.valueOf(-2), BigDecimal.valueOf(-1)}
+        };
         BigDecimal[][] result = matrixByMatrixCalculator.subtract(matrix1, matrix2);
         assertTrue(Arrays.equals(expected[0], result[0]));
         assertTrue(Arrays.equals(expected[1], result[1]));
     }
 
     @Test
-    void multiplyMatrixAndMatrixIntegers() {
-        BigDecimal[][] matrix1 = {{BigDecimal.valueOf(1), BigDecimal.valueOf(2)}, {BigDecimal.valueOf(3), BigDecimal.valueOf(4)}};
-        BigDecimal[][] matrix2 = {{BigDecimal.valueOf(5), BigDecimal.valueOf(6)}, {BigDecimal.valueOf(0), BigDecimal.valueOf(7)}};
-        BigDecimal[][] expected = {{BigDecimal.valueOf(5), BigDecimal.valueOf(20)}, {BigDecimal.valueOf(15), BigDecimal.valueOf(46)}};
+    void multiplyMatrixAndMatrix_2_row_2_column_x_2_row_2_column() {
+        BigDecimal[][] matrix1 = {
+                {BigDecimal.valueOf(1), BigDecimal.valueOf(2)},
+                {BigDecimal.valueOf(3), BigDecimal.valueOf(4)}
+        };
+        BigDecimal[][] matrix2 = {
+                {BigDecimal.valueOf(5), BigDecimal.valueOf(6)},
+                {BigDecimal.valueOf(0), BigDecimal.valueOf(7)}
+        };
+        BigDecimal[][] expected = {
+                {BigDecimal.valueOf(5), BigDecimal.valueOf(20)},
+                {BigDecimal.valueOf(15), BigDecimal.valueOf(46)}
+        };
+        BigDecimal[][] result = matrixByMatrixCalculator.multiply(matrix1, matrix2);
+        assertTrue(Arrays.equals(expected[0], result[0]));
+        assertTrue(Arrays.equals(expected[1], result[1]));
+    }
+
+    @Test
+    void multiplyMatrixAndMatrix_2_row_3_column_x_3_row_2_column() {
+        BigDecimal[][] matrix1 = {
+                {BigDecimal.valueOf(1), BigDecimal.valueOf(2), BigDecimal.valueOf(3)},
+                {BigDecimal.valueOf(4), BigDecimal.valueOf(5), BigDecimal.valueOf(6)}
+        };
+        BigDecimal[][] matrix2 = {
+                {BigDecimal.valueOf(6), BigDecimal.valueOf(3)},
+                {BigDecimal.valueOf(5), BigDecimal.valueOf(2)},
+                {BigDecimal.valueOf(4), BigDecimal.valueOf(1)}
+        };
+        BigDecimal[][] expected = {
+                {BigDecimal.valueOf(28), BigDecimal.valueOf(10)},
+                {BigDecimal.valueOf(73), BigDecimal.valueOf(28)}
+        };
         BigDecimal[][] result = matrixByMatrixCalculator.multiply(matrix1, matrix2);
         assertTrue(Arrays.equals(expected[0], result[0]));
         assertTrue(Arrays.equals(expected[1], result[1]));
@@ -64,9 +114,15 @@ class MatrixCalculatorTest {
 
     @Test
     void multiplyMatrixAndNumberIntegers() {
-        BigDecimal[][] matrix = {{BigDecimal.valueOf(1), BigDecimal.valueOf(2)}, {BigDecimal.valueOf(3), BigDecimal.valueOf(4)}};
+        BigDecimal[][] matrix = {
+                {BigDecimal.valueOf(1), BigDecimal.valueOf(2)},
+                {BigDecimal.valueOf(3), BigDecimal.valueOf(4)}
+        };
         BigDecimal number = BigDecimal.valueOf(3);
-        BigDecimal[][] expected = {{BigDecimal.valueOf(3), BigDecimal.valueOf(6)}, {BigDecimal.valueOf(9), BigDecimal.valueOf(12)}};
+        BigDecimal[][] expected = {
+                {BigDecimal.valueOf(3), BigDecimal.valueOf(6)},
+                {BigDecimal.valueOf(9), BigDecimal.valueOf(12)}
+        };
         BigDecimal[][] result = matrixByNumberCalculator.multiply(matrix, number);
         assertTrue(Arrays.equals(expected[0], result[0]));
         assertTrue(Arrays.equals(expected[1], result[1]));

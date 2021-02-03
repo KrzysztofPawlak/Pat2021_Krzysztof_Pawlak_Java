@@ -31,20 +31,20 @@ public class MatrixByVectorCalculator implements Suggestive {
         }
     }
 
-    public BigDecimal[][] calculate(BigDecimal[][] matrix, Vector<BigDecimal> vector, int operation) {
+    public Vector<BigDecimal> calculate(BigDecimal[][] matrix, Vector<BigDecimal> vector, int operation) {
         final var selectedOperation = Operations.valueOf(operation);
         switch (selectedOperation) {
             case MULTIPLY:
-                //return multiply(matrix, vector); // TODO
+                return multiply(matrix, vector);
             default:
                 throw new UnsupportedOperationException();
         }
     }
 
-    public Vector<BigDecimal> multiply(double[][] matrix, Vector<BigDecimal> vector) {
+    public Vector<BigDecimal> multiply(BigDecimal[][] matrix, Vector<BigDecimal> vector) {
         return Arrays.stream(matrix).map(row ->
                 IntStream.range(0, row.length)
-                        .mapToObj(indexColumn -> BigDecimal.valueOf(row[indexColumn]).multiply(vector.get(indexColumn)))
+                        .mapToObj(indexColumn -> row[indexColumn].multiply(vector.get(indexColumn)))
                         .reduce(BigDecimal.ZERO, BigDecimal::add))
                 .collect(Collectors.toCollection(Vector::new));
     }

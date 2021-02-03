@@ -13,7 +13,7 @@ public class InputParse {
     // ;(?!]) - semicolon can occur if next char is not "]" (regex lookahead)
     static final String ALLOWED_CHARS = "-?[0-9]+\\.?[0-9]*|\\[(\\u0020?-?[0-9]+\\.?[0-9]*\\u0020?(;(?!]))?){2,}]";
 
-    private boolean isValid(String input) {
+    public boolean isValid(String input) {
         return input.matches(ALLOWED_CHARS);
     }
 

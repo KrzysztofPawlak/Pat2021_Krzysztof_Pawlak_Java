@@ -51,6 +51,9 @@ public class MatrixByMatrixCalculator implements Suggestive {
     }
 
     public BigDecimal[][] add(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
+        if (matrix.length != matrix2.length || matrix[0].length != matrix2[0].length) {
+            throw new IllegalArgumentException("sorry, it's not possible to add matrices with different rows and columns length");
+        }
         return IntStream.range(0, matrix.length)
                 .mapToObj(rowIndex -> IntStream.range(0, matrix[rowIndex].length)
                         .mapToObj(columnIndex -> matrix[rowIndex][columnIndex].add(matrix2[rowIndex][columnIndex]))
@@ -59,6 +62,9 @@ public class MatrixByMatrixCalculator implements Suggestive {
     }
 
     public BigDecimal[][] subtract(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
+        if (matrix.length != matrix2.length || matrix[0].length != matrix2[0].length) {
+            throw new IllegalArgumentException("sorry, it's not possible to subtract matrices with different rows and columns length");
+        }
         return IntStream.range(0, matrix.length)
                 .mapToObj(rowIndex -> IntStream.range(0, matrix[rowIndex].length)
                         .mapToObj(columnIndex -> matrix[rowIndex][columnIndex].subtract(matrix2[rowIndex][columnIndex]))
@@ -67,8 +73,11 @@ public class MatrixByMatrixCalculator implements Suggestive {
     }
 
     public BigDecimal[][] multiply(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
+        if (matrix.length != matrix2[0].length || matrix[0].length != matrix2.length) {
+            throw new IllegalArgumentException("sorry, it's not possible to multiply matrices with this rows and columns length");
+        }
         return Arrays.stream(matrix).map(row ->
-                IntStream.range(0, row.length)
+                IntStream.range(0, matrix2[0].length)
                         .mapToObj(columnIndexMatrix1 -> IntStream.range(0, matrix2.length)
                                 .mapToObj(rowIndexMatrix2 -> row[rowIndexMatrix2].multiply(matrix2[rowIndexMatrix2][columnIndexMatrix1]))
                                 .reduce(BigDecimal.ZERO, BigDecimal::add))
