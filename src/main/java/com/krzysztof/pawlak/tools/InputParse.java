@@ -12,9 +12,14 @@ public class InputParse {
     // \\u0020 - space
     // ;(?!]) - semicolon can occur if next char is not "]" (regex lookahead)
     static final String ALLOWED_CHARS = "-?[0-9]+\\.?[0-9]*|\\[(\\u0020?-?[0-9]+\\.?[0-9]*\\u0020?(;(?!]))?){2,}]";
+    static final String ONLY_ONE_NUMBER = "^\\u0020*-?[0-9]+\\.?[0-9]*\\u0020*$";
 
     public boolean isValid(String input) {
         return input.matches(ALLOWED_CHARS);
+    }
+
+    public boolean isOnlyOneNumber(String input) {
+        return input.matches(ONLY_ONE_NUMBER);
     }
 
     public void isValidThrowException(String input) {
@@ -31,6 +36,9 @@ public class InputParse {
                     return parseToVectorRow(input);
                 }
                 final String[] rows = input.split(";");
+                if (isOnlyOneNumber(rows[0])) {
+                    return parseToVectorColumn(rows);
+                }
                 final String[] firstRow = rows[0].split(" ");
                 final int rowsCount = rows.length;
                 final int columnsCount = clearEmptyElements(firstRow).length;
@@ -67,11 +75,11 @@ public class InputParse {
     private Vector<BigDecimal> parseToVectorColumn(String[] rows) {
         final Vector<BigDecimal> result = new Vector<>();
         for (String row : rows) {
-            final String[] valuesInRow = row.split(" ");
-            if (!isRowOrColumnVector(valuesInRow.length)) {
+            if (!isOnlyOneNumber(row)) {
                 throw new IllegalArgumentException();
             }
-            result.add(BigDecimal.valueOf(Double.parseDouble(valuesInRow[0])));
+            final double resultToAdd = Double.parseDouble(row.replace(" ", ""));
+            result.add(BigDecimal.valueOf(resultToAdd));
         }
         return result;
     }

@@ -11,7 +11,7 @@ public class Main {
         var reader = new BufferedReader(new InputStreamReader(System.in));
         var application = new Application();
         String input;
-        System.out.println("enter some data");
+        System.out.println("Enter some data.");
 
         while (true) {
             input = reader.readLine();

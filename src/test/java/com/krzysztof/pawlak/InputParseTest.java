@@ -31,4 +31,16 @@ class InputParseTest {
     void testInputInvalid(String input) {
         assertFalse(inputParse.isValid(input));
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {" 2 ", "2 ", " 2", "2", "  2", "22 ", "5.6"})
+    void shouldContainOnlyOneNumber(String input) {
+        assertTrue(inputParse.isOnlyOneNumber(input));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {" 2 2", "2 2", "2.1 2", " e 2", "e 2 2"})
+    void shouldBeInvalidIfMoreThanOneNumber(String input) {
+        assertFalse(inputParse.isOnlyOneNumber(input));
+    }
 }
