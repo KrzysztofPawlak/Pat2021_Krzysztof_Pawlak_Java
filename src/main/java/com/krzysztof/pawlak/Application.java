@@ -27,7 +27,7 @@ public class Application {
     private final CalculatorSelector calculatorSelector;
     private static final int MAX_MEMORY_SLOT = 2;
     private static final int ELEMENTS_IN_MEMORY_FOR_EXTENDED_MODE = 1;
-    private final static Logger LOGGER = Logger.getLogger(Application.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
 
     public Application() {
         this.inputParse = new InputParse();
@@ -54,31 +54,18 @@ public class Application {
     private void handleNormalMode(String input) throws OperationNotSupportedException {
         if (mode == Mode.OPTION_SELECTED) {
             LOGGER.log(Level.INFO, "OPTION_SELECTED");
-            validateSelectedOption(input);
             final int option = getOption(input);
-            LOGGER.log(Level.INFO, "getOption");
             final var valueContainer = calculate(option);
             hud.printElementFromMemory(valueContainer, deque.size());
             mode = Mode.INPUT;
+            suggestEnterData();
             return;
         }
         if (mode == Mode.INPUT) {
             LOGGER.log(Level.INFO, "INPUT");
             addDataToMemory(input);
         }
-        if (deque.size() == MAX_MEMORY_SLOT) {
-            LOGGER.log(Level.INFO, "MAX_MEMORY_SLOT");
-            suggest();
-        }
-    }
-
-    private void validateSelectedOption(String input) {
-        try {
-            Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("You should select operation from list or " +
-                    "clear current values from memory by typing: c / c1 / c2");
-        }
+        suggestEnterData();
     }
 
     private void handleExtendedMode(String input) throws OperationNotSupportedException {
@@ -102,10 +89,33 @@ public class Application {
         }
     }
 
+    private void validateSelectedOption(String input) {
+        try {
+            Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("You should select one operation from list or " +
+                    "clear current values from memory by typing: c / c1 / c2");
+        }
+    }
+
+    private void suggestEnterData() throws OperationNotSupportedException {
+        if (deque.size() == 1 && deque.peek().getInputType() == InputType.NUMBER) {
+            System.out.println("Enter some data or switch to extended mode (SQRT) typing: \"o\".");
+        }
+        if (deque.size() == MAX_MEMORY_SLOT) {
+            LOGGER.log(Level.INFO, "MAX_MEMORY_SLOT");
+            suggest();
+        }
+        if (deque.size() == 1 && deque.peek().getInputType() != InputType.NUMBER) {
+            System.out.println("Enter some data.");
+        }
+    }
+
     private void suggest() throws OperationNotSupportedException {
         final List<String> suggestions = suggester.suggest(deque);
         suggester.print(suggestions);
         mode = Mode.OPTION_SELECTED;
+        System.out.println("Select one of the displayed options.");
     }
 
     private ValueContainer calculate(int option) throws OperationNotSupportedException {
@@ -116,10 +126,10 @@ public class Application {
     }
 
     private int getOption(String input) throws OperationNotSupportedException {
-        LOGGER.log(Level.INFO, "parse option");
+        LOGGER.log(Level.INFO, "parse option to selected option number");
         final int option = Integer.parseInt(input);
         if (option > suggester.suggest(deque).size()) {
-            throw new IllegalArgumentException("selected option is out of available options");
+            throw new IllegalArgumentException("Selected option is not available. Enter again.");
         }
         return option;
     }

@@ -19,7 +19,7 @@ class InputParseTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"11", "11.2", "-16", "[1 2 3 4]", "[1 2 3; 4 5 6; 7 8 10]", "[1 2 ;4 5]", "[1;2]",
-            "[1 2 ; 4 5]", "[ 1 2 ; 4 5]", "[1 2 ; 4 5 ]"})
+            "[1 2 ; 4 5]", "[ 1 2 ; 4 5]", "[1 2 ; 4 5 ]", "[ 71 ; 5 ; 19 ]"})
     void testInputValid(String input) {
         assertTrue(inputParse.isValid(input));
     }

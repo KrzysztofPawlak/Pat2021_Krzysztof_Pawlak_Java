@@ -19,7 +19,7 @@ public class InputParse {
 
     public void isValidThrowException(String input) {
         if (!isValid(input)) {
-            throw new IllegalArgumentException("Sorry it's not a number, vector or matrix. Enter h to show help.");
+            throw new IllegalArgumentException("Sorry it's not a number, vector or matrix. Please try again or enter \"h\" to show help.");
         }
     }
 

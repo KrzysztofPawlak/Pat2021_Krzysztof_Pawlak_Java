@@ -22,16 +22,16 @@ class VectorCalculatorTest {
 
     @Test
     void multiply() {
-        var vector = new Vector(List.of(1.2, 2.1));
-        var expected = new Vector(List.of(2.4, 4.2));
+        var vector = new Vector(List.of(BigDecimal.valueOf(1.2), BigDecimal.valueOf(2.1)));
+        var expected = new Vector(List.of(BigDecimal.valueOf(2.4), BigDecimal.valueOf(4.2)));
         assertEquals(expected, vectorByNumberCalculator.multiply(vector, BigDecimal.valueOf(2)));
     }
 
     @Test
     void add() {
-        var vector = new Vector(List.of(1.2, 2.1));
-        var vector2 = new Vector(List.of(2.3, 1.6));
-        var expected = new Vector(List.of(3.5, 3.7));
+        var vector = new Vector(List.of(BigDecimal.valueOf(1.2), BigDecimal.valueOf(2.1)));
+        var vector2 = new Vector(List.of(BigDecimal.valueOf(2.3), BigDecimal.valueOf(1.6)));
+        var expected = new Vector(List.of(BigDecimal.valueOf(3.5), BigDecimal.valueOf(3.7)));
         assertEquals(expected, vectorByVectorCalculator.add(vector, vector2));
     }
 
