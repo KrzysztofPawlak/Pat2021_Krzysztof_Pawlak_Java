@@ -19,7 +19,7 @@ public class InputParse {
 
     public void isValidThrowException(String input) {
         if (!isValid(input)) {
-            throw new IllegalArgumentException("invalid syntax");
+            throw new IllegalArgumentException("Sorry it's not a number, vector or matrix. Enter h to show help.");
         }
     }
 
@@ -43,7 +43,7 @@ public class InputParse {
             }
             return BigDecimal.valueOf(Double.parseDouble(input));
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("can't parse input");
+            throw new IllegalArgumentException("Can't parse input");
         }
     }
 

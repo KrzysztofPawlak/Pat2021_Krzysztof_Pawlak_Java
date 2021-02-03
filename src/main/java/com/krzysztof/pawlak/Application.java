@@ -13,6 +13,8 @@ import javax.naming.OperationNotSupportedException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Application {
 
@@ -25,6 +27,7 @@ public class Application {
     private final CalculatorSelector calculatorSelector;
     private static final int MAX_MEMORY_SLOT = 2;
     private static final int ELEMENTS_IN_MEMORY_FOR_EXTENDED_MODE = 1;
+    private final static Logger LOGGER = Logger.getLogger(Application.class.getName());
 
     public Application() {
         this.inputParse = new InputParse();
@@ -42,36 +45,50 @@ public class Application {
             } else {
                 handleNormalMode(input);
             }
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | OperationNotSupportedException e) {
+            LOGGER.log(Level.WARNING, e.getMessage());
             System.out.println(e.getMessage());
-            return;
-        } catch (OperationNotSupportedException e) {
-            e.printStackTrace();
         }
     }
 
     private void handleNormalMode(String input) throws OperationNotSupportedException {
         if (mode == Mode.OPTION_SELECTED) {
+            LOGGER.log(Level.INFO, "OPTION_SELECTED");
+            validateSelectedOption(input);
             final int option = getOption(input);
+            LOGGER.log(Level.INFO, "getOption");
             final var valueContainer = calculate(option);
             hud.printElementFromMemory(valueContainer, deque.size());
             mode = Mode.INPUT;
             return;
         }
         if (mode == Mode.INPUT) {
+            LOGGER.log(Level.INFO, "INPUT");
             addDataToMemory(input);
         }
         if (deque.size() == MAX_MEMORY_SLOT) {
+            LOGGER.log(Level.INFO, "MAX_MEMORY_SLOT");
             suggest();
+        }
+    }
+
+    private void validateSelectedOption(String input) {
+        try {
+            Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("You should select operation from list or " +
+                    "clear current values from memory by typing: c / c1 / c2");
         }
     }
 
     private void handleExtendedMode(String input) throws OperationNotSupportedException {
         if (mode == Mode.SELECTION) {
+            LOGGER.log(Level.INFO, "SELECTION");
             suggest();
             return;
         }
         if (mode == Mode.OPTION_SELECTED) {
+            LOGGER.log(Level.INFO, "OPTION_SELECTED");
             final int option = getOption(input);
             final var valueContainer = calculate(option);
             hud.printElementFromMemory(valueContainer, deque.size());
@@ -80,6 +97,7 @@ public class Application {
             return;
         }
         if (mode == Mode.INPUT) {
+            LOGGER.log(Level.INFO, "INPUT");
             addDataToMemory(input);
         }
     }
@@ -98,14 +116,16 @@ public class Application {
     }
 
     private int getOption(String input) throws OperationNotSupportedException {
+        LOGGER.log(Level.INFO, "parse option");
         final int option = Integer.parseInt(input);
         if (option > suggester.suggest(deque).size()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("selected option is out of available options");
         }
         return option;
     }
 
     private void addDataToMemory(String input) {
+        LOGGER.log(Level.INFO, "addDataToMemory");
         inputParse.isValidThrowException(input);
         final var object = inputParse.parse(input);
         final var valueContainer = new ValueContainer(object);
@@ -113,13 +133,12 @@ public class Application {
         hud.printElementFromMemory(valueContainer, deque.size());
     }
 
-    public boolean shouldSwitchToExtendedMode(String input) {
+    public void shouldSwitchToExtendedMode(String input) {
         final boolean isExtendedMode = deque.size() == ELEMENTS_IN_MEMORY_FOR_EXTENDED_MODE &&
                 deque.peek().getInputType() == InputType.NUMBER && input.equals("o");
         if (isExtendedMode) {
             calculationMode = CalculationMode.EXTENDED;
             mode = Mode.SELECTION;
         }
-        return isExtendedMode;
     }
 }
