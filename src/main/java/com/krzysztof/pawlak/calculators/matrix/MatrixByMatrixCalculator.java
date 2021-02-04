@@ -1,22 +1,20 @@
 package com.krzysztof.pawlak.calculators.matrix;
 
-import com.krzysztof.pawlak.calculators.Suggestive;
+import com.krzysztof.pawlak.calculators.Calculator;
+import com.krzysztof.pawlak.models.ValueContainer;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class MatrixByMatrixCalculator implements Suggestive {
+public class MatrixByMatrixCalculator implements Calculator {
 
     private enum Operations {
-        ADD(0),
-        SUBTRACT(1),
-        MULTIPLY(2);
+        ADD(1),
+        SUBTRACT(2),
+        MULTIPLY(3);
 
         private static Map map = new HashMap<>();
         private final int value;
@@ -36,15 +34,17 @@ public class MatrixByMatrixCalculator implements Suggestive {
         }
     }
 
-    public BigDecimal[][] calculate(BigDecimal[][] matrix, BigDecimal[][] matrix2, int operation) {
+    public BigDecimal[][] calculate(Deque<ValueContainer> deque, int operation) {
         final var selectedOperation = Operations.valueOf(operation);
+        final var value = deque.peekFirst();
+        final var value2 = deque.peekLast();
         switch (selectedOperation) {
             case ADD:
-                return add(matrix, matrix2);
+                return add((BigDecimal[][]) value.getValue(), (BigDecimal[][]) value2.getValue());
             case SUBTRACT:
-                return subtract(matrix, matrix2);
+                return subtract((BigDecimal[][]) value.getValue(), (BigDecimal[][]) value2.getValue());
             case MULTIPLY:
-                return multiply(matrix, matrix2);
+                return multiply((BigDecimal[][]) value.getValue(), (BigDecimal[][]) value2.getValue());
             default:
                 throw new UnsupportedOperationException();
         }
@@ -52,7 +52,7 @@ public class MatrixByMatrixCalculator implements Suggestive {
 
     public BigDecimal[][] add(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
         if (matrix.length != matrix2.length || matrix[0].length != matrix2[0].length) {
-            throw new IllegalArgumentException("sorry, it's not possible to add matrices with different rows and columns length");
+            throw new IllegalArgumentException("Sorry, it's not possible to add matrices with different rows and columns length.");
         }
         return IntStream.range(0, matrix.length)
                 .mapToObj(rowIndex -> IntStream.range(0, matrix[rowIndex].length)
@@ -63,7 +63,7 @@ public class MatrixByMatrixCalculator implements Suggestive {
 
     public BigDecimal[][] subtract(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
         if (matrix.length != matrix2.length || matrix[0].length != matrix2[0].length) {
-            throw new IllegalArgumentException("sorry, it's not possible to subtract matrices with different rows and columns length");
+            throw new IllegalArgumentException("Sorry, it's not possible to subtract matrices with different rows and columns length.");
         }
         return IntStream.range(0, matrix.length)
                 .mapToObj(rowIndex -> IntStream.range(0, matrix[rowIndex].length)
@@ -74,7 +74,7 @@ public class MatrixByMatrixCalculator implements Suggestive {
 
     public BigDecimal[][] multiply(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
         if (matrix.length != matrix2[0].length || matrix[0].length != matrix2.length) {
-            throw new IllegalArgumentException("sorry, it's not possible to multiply matrices with this rows and columns length");
+            throw new IllegalArgumentException("Sorry, it's not possible to multiply matrices with this rows and columns length.");
         }
         return Arrays.stream(matrix).map(row ->
                 IntStream.range(0, matrix2[0].length)

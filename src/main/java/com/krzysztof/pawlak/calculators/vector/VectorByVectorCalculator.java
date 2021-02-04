@@ -1,21 +1,19 @@
 package com.krzysztof.pawlak.calculators.vector;
 
-import com.krzysztof.pawlak.calculators.Suggestive;
+import com.krzysztof.pawlak.calculators.Calculator;
+import com.krzysztof.pawlak.models.ValueContainer;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class VectorByVectorCalculator implements Suggestive {
+public class VectorByVectorCalculator implements Calculator {
 
     private enum Operations {
-        ADD(0),
-        SUBTRACT(1);
+        ADD(1),
+        SUBTRACT(2);
 
         private static Map map = new HashMap<>();
         private final int value;
@@ -35,13 +33,15 @@ public class VectorByVectorCalculator implements Suggestive {
         }
     }
 
-    public Vector<BigDecimal> calculate(Vector<BigDecimal> vector, Vector<BigDecimal> vector2, int operation) {
+    public Vector<BigDecimal> calculate(Deque<ValueContainer> deque, int operation) {
         final var selectedOperation = Operations.valueOf(operation);
+        final var value = (Vector<BigDecimal>) deque.peekFirst().getValue();
+        final var value2 = (Vector<BigDecimal>) deque.peekLast().getValue();
         switch (selectedOperation) {
             case ADD:
-                return add(vector, vector2);
+                return add(value, value2);
             case SUBTRACT:
-                return subtract(vector, vector2);
+                return subtract(value, value2);
             default:
                 throw new UnsupportedOperationException();
         }

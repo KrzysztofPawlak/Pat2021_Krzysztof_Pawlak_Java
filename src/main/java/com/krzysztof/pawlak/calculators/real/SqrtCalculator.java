@@ -1,19 +1,21 @@
 package com.krzysztof.pawlak.calculators.real;
 
-import com.krzysztof.pawlak.calculators.Suggestive;
+import com.krzysztof.pawlak.calculators.Calculator;
+import com.krzysztof.pawlak.models.ValueContainer;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SqrtCalculator implements Suggestive {
+public class SqrtCalculator implements Calculator {
 
     private enum Operations {
-        SQRT(0);
+        SQRT(1);
 
         private static Map map = new HashMap<>();
         private final int value;
@@ -33,11 +35,12 @@ public class SqrtCalculator implements Suggestive {
         }
     }
 
-    public BigDecimal calculate(BigDecimal number, int operation) {
+    public BigDecimal calculate(Deque<ValueContainer> deque, int operation) {
         final var selectedOperation = Operations.valueOf(operation);
+        final var value = (BigDecimal) deque.peekFirst().getValue();
         switch (selectedOperation) {
             case SQRT:
-                return sqrt(number);
+                return sqrt(value);
             default:
                 throw new UnsupportedOperationException();
         }

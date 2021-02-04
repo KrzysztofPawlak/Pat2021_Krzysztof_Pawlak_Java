@@ -1,19 +1,18 @@
 package com.krzysztof.pawlak.calculators.matrix;
 
-import com.krzysztof.pawlak.calculators.Suggestive;
+import com.krzysztof.pawlak.calculators.Calculator;
+import com.krzysztof.pawlak.models.InputType;
+import com.krzysztof.pawlak.models.ValueContainer;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class MatrixByNumberCalculator implements Suggestive {
+public class MatrixByNumberCalculator implements Calculator {
 
     private enum Operations {
-        MULTIPLY(0);
+        MULTIPLY(1);
 
         private static Map map = new HashMap<>();
         private final int value;
@@ -33,11 +32,15 @@ public class MatrixByNumberCalculator implements Suggestive {
         }
     }
 
-    public BigDecimal[][] calculate(BigDecimal[][] matrix, BigDecimal number, int operation) {
+    public BigDecimal[][] calculate(Deque<ValueContainer> deque, int operation) {
         final var selectedOperation = Operations.valueOf(operation);
+        final var value = deque.peekFirst();
+        final var value2 = deque.peekLast();
         switch (selectedOperation) {
             case MULTIPLY:
-                return multiply(matrix, number);
+                return (value.getInputType() == InputType.MATRIX && value2.getInputType() == InputType.NUMBER) ?
+                        multiply((BigDecimal[][]) value.getValue(), (BigDecimal) value2.getValue()) :
+                        multiply((BigDecimal[][]) value2.getValue(), (BigDecimal) value.getValue());
             default:
                 throw new UnsupportedOperationException();
         }

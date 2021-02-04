@@ -6,7 +6,9 @@ import com.krzysztof.pawlak.models.ValueContainer;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.List;
 import java.util.Vector;
+import java.util.stream.IntStream;
 
 public class HUD {
 
@@ -52,5 +54,10 @@ public class HUD {
     private void display(Vector vector) {
         Arrays.stream(vector.toArray()).forEach(value -> System.out.print(" " + value + " "));
         System.out.println();
+    }
+
+    public void printSuggestions(List<String> suggestions) {
+        System.out.println("# options #");
+        IntStream.range(0, suggestions.size()).forEach(index -> System.out.println((index + 1) + ". " + suggestions.get(index)));
     }
 }

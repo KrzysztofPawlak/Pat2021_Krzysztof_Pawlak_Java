@@ -1,16 +1,18 @@
 package com.krzysztof.pawlak.calculators.vector;
 
-import com.krzysztof.pawlak.calculators.Suggestive;
+import com.krzysztof.pawlak.calculators.Calculator;
+import com.krzysztof.pawlak.models.InputType;
+import com.krzysztof.pawlak.models.ValueContainer;
 
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class VectorByNumberCalculator implements Suggestive {
+public class VectorByNumberCalculator implements Calculator {
 
     private enum Operations {
-        MULTIPLY(0);
+        MULTIPLY(1);
 
         private static Map map = new HashMap<>();
         private final int value;
@@ -30,11 +32,15 @@ public class VectorByNumberCalculator implements Suggestive {
         }
     }
 
-    public Vector calculate(Vector<BigDecimal> vector, BigDecimal number, int operation) {
+    public Vector<BigDecimal> calculate(Deque<ValueContainer> deque, int operation) {
         final var selectedOperation = Operations.valueOf(operation);
+        final var value = deque.peekFirst();
+        final var value2 = deque.peekLast();
         switch (selectedOperation) {
             case MULTIPLY:
-                return multiply(vector, number);
+                return (value.getInputType() == InputType.VECTOR && value2.getInputType() == InputType.NUMBER) ?
+                        multiply((Vector<BigDecimal>) value.getValue(), (BigDecimal) value2.getValue()) :
+                        multiply((Vector<BigDecimal>) value2.getValue(), (BigDecimal) value.getValue());
             default:
                 throw new UnsupportedOperationException();
         }

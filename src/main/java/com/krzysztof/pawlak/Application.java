@@ -7,7 +7,6 @@ import com.krzysztof.pawlak.models.ValueContainer;
 import com.krzysztof.pawlak.tools.CalculatorSelector;
 import com.krzysztof.pawlak.tools.HUD;
 import com.krzysztof.pawlak.tools.InputParse;
-import com.krzysztof.pawlak.tools.Suggester;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.ArrayDeque;
@@ -20,7 +19,6 @@ public class Application {
 
     private final InputParse inputParse;
     private final Deque<ValueContainer> deque;
-    private final Suggester suggester;
     private final HUD hud;
     private Mode mode = Mode.INPUT;
     private CalculationMode calculationMode = CalculationMode.NORMAL;
@@ -32,7 +30,6 @@ public class Application {
     public Application() {
         this.inputParse = new InputParse();
         this.deque = new ArrayDeque();
-        this.suggester = new Suggester();
         this.hud = new HUD();
         this.calculatorSelector = new CalculatorSelector();
     }
@@ -89,12 +86,12 @@ public class Application {
         }
     }
 
-    private void validateSelectedOption(String input) {
+    private int returnOptionIfValid(String input) {
         try {
-            Integer.parseInt(input);
+            return Integer.parseInt(input);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("You should select one operation from list or " +
-                    "clear current values from memory by typing: c / c1 / c2");
+                    "clear current values from memory by typing: c / c1 / c2.");
         }
     }
 
@@ -112,8 +109,8 @@ public class Application {
     }
 
     private void suggest() throws OperationNotSupportedException {
-        final List<String> suggestions = suggester.suggest(deque);
-        suggester.print(suggestions);
+        final List<String> suggestions = calculatorSelector.suggest(deque);
+        hud.printSuggestions(suggestions);
         mode = Mode.OPTION_SELECTED;
         System.out.println("Select one of the displayed options.");
     }
@@ -127,8 +124,8 @@ public class Application {
 
     private int getOption(String input) throws OperationNotSupportedException {
         LOGGER.log(Level.INFO, "parse option to selected option number");
-        final int option = Integer.parseInt(input);
-        if (option > suggester.suggest(deque).size()) {
+        final int option = returnOptionIfValid(input);
+        if (option > calculatorSelector.suggest(deque).size() || option < 1) {
             throw new IllegalArgumentException("Selected option is not available. Enter again.");
         }
         return option;

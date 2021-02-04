@@ -1,22 +1,24 @@
 package com.krzysztof.pawlak.calculators.real;
 
-import com.krzysztof.pawlak.calculators.Suggestive;
+import com.krzysztof.pawlak.calculators.Calculator;
+import com.krzysztof.pawlak.models.ValueContainer;
 
 import java.math.BigDecimal;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class RealNumbersCalculator implements Suggestive {
+public class RealNumbersCalculator implements Calculator {
 
     private enum Operations {
-        ADD(0),
-        SUBTRACT(1),
-        MULTIPLY(2),
-        DIVIDE(3),
-        EXP(4);
+        ADD(1),
+        SUBTRACT(2),
+        MULTIPLY(3),
+        DIVIDE(4),
+        EXP(5);
 
         private static Map map = new HashMap<>();
         private final int value;
@@ -36,19 +38,22 @@ public class RealNumbersCalculator implements Suggestive {
         }
     }
 
-    public BigDecimal calculate(BigDecimal number, BigDecimal number2, int operation) {
+    @Override
+    public BigDecimal calculate(Deque<ValueContainer> deque, int operation) {
         final var selectedOperation = Operations.valueOf(operation);
+        final var value = (BigDecimal) deque.peekFirst().getValue();
+        final var value2 = (BigDecimal) deque.peekLast().getValue();
         switch (selectedOperation) {
             case ADD:
-                return add(number, number2);
+                return add(value, value2);
             case SUBTRACT:
-                return subtract(number, number2);
+                return subtract(value, value2);
             case MULTIPLY:
-                return multiply(number, number2);
+                return multiply(value, value2);
             case DIVIDE:
-                return divide(number, number2);
+                return divide(value, value2);
             case EXP:
-                return exp(number, number2.intValue());
+                return exp(value, value2.intValue());
             default:
                 throw new UnsupportedOperationException();
         }
@@ -69,7 +74,7 @@ public class RealNumbersCalculator implements Suggestive {
     // TODO: by zero
     public BigDecimal divide(BigDecimal number, BigDecimal number2) {
         if (number2.compareTo(BigDecimal.ZERO) == 0) {
-            throw new IllegalArgumentException("cannot divide by zero!!!");
+            throw new IllegalArgumentException("Cannot divide by zero!!!");
         }
         return number.divide(number2).stripTrailingZeros();
     }

@@ -1,5 +1,6 @@
 package com.krzysztof.pawlak.tools;
 
+import com.krzysztof.pawlak.calculators.Calculator;
 import com.krzysztof.pawlak.calculators.matrix.MatrixByMatrixCalculator;
 import com.krzysztof.pawlak.calculators.matrix.MatrixByNumberCalculator;
 import com.krzysztof.pawlak.calculators.matrix.MatrixByVectorCalculator;
@@ -11,9 +12,8 @@ import com.krzysztof.pawlak.models.InputType;
 import com.krzysztof.pawlak.models.ValueContainer;
 
 import javax.naming.OperationNotSupportedException;
-import java.math.BigDecimal;
 import java.util.Deque;
-import java.util.Vector;
+import java.util.List;
 
 public class CalculatorSelector {
 
@@ -25,53 +25,72 @@ public class CalculatorSelector {
     private static final RealNumbersCalculator realNumbersCalculator = new RealNumbersCalculator();
     private static final SqrtCalculator sqrtCalculator = new SqrtCalculator();
 
-    public Object calculate(Deque<ValueContainer> deque, int selected) throws OperationNotSupportedException {
+    private Calculator select(Deque<ValueContainer> deque) throws OperationNotSupportedException {
 
         final var value = deque.peekFirst();
-        if (deque.size() == 1 && value.getInputType() == InputType.NUMBER) {
-            return sqrtCalculator.calculate((BigDecimal) value.getValue(), selected);
+        if (isOnlyNumber(deque, value)) {
+            return sqrtCalculator;
         }
         final var value2 = deque.peekLast();
-        if (value.getInputType() == InputType.NUMBER && value2.getInputType() == InputType.NUMBER) {
-            return realNumbersCalculator.calculate((BigDecimal) value.getValue(),
-                    (BigDecimal) value2.getValue(), selected);
+        if (isNumberAndNumber(value, value2)) {
+            return realNumbersCalculator;
         }
-        if (value.getInputType() == InputType.MATRIX && value2.getInputType() == InputType.MATRIX) {
-            return matrixByMatrixCalculator.calculate((BigDecimal[][]) value.getValue(),
-                    (BigDecimal[][]) value2.getValue(), selected);
+        if (isMatrixAndMatrix(value, value2)) {
+            return matrixByMatrixCalculator;
         }
-
-        if (value.getInputType() == InputType.MATRIX && value2.getInputType() == InputType.NUMBER) {
-            return matrixByNumberCalculator.calculate((BigDecimal[][]) value.getValue(),
-                    (BigDecimal) value2.getValue(), selected);
+        if (isMatrixAndVector(value, value2)) {
+            return matrixByVectorCalculator;
         }
-        if (value.getInputType() == InputType.NUMBER && value2.getInputType() == InputType.MATRIX) {
-            return matrixByNumberCalculator.calculate((BigDecimal[][]) value2.getValue(),
-                    (BigDecimal) value.getValue(), selected);
+        if (isMatrixAndNumber(value, value2)) {
+            return matrixByNumberCalculator;
         }
-
-        if (value.getInputType() == InputType.MATRIX && value2.getInputType() == InputType.VECTOR) {
-            return matrixByVectorCalculator.calculate((BigDecimal[][]) value.getValue(),
-                    (Vector<BigDecimal>) value2.getValue(), selected);
+        if (isVectorAndVector(value, value2)) {
+            return vectorByVectorCalculator;
         }
-        if (value.getInputType() == InputType.VECTOR && value2.getInputType() == InputType.MATRIX) {
-            return matrixByVectorCalculator.calculate((BigDecimal[][]) value2.getValue(),
-                    (Vector<BigDecimal>) value.getValue(), selected);
-        }
-
-        if (value.getInputType() == InputType.VECTOR && value2.getInputType() == InputType.VECTOR) {
-            return vectorByVectorCalculator.calculate((Vector<BigDecimal>) value.getValue(),
-                    (Vector<BigDecimal>) value2.getValue(), selected);
-        }
-
-        if (value.getInputType() == InputType.VECTOR && value2.getInputType() == InputType.NUMBER) {
-            return vectorByNumberCalculator.calculate((Vector<BigDecimal>) value.getValue(),
-                    (BigDecimal) value2.getValue(), selected);
-        }
-        if (value.getInputType() == InputType.NUMBER && value2.getInputType() == InputType.VECTOR) {
-            return vectorByNumberCalculator.calculate((Vector<BigDecimal>) value2.getValue(),
-                    (BigDecimal) value.getValue(), selected);
+        if (isVectorAndNumber(value, value2)) {
+            return vectorByNumberCalculator;
         }
         throw new OperationNotSupportedException();
+    }
+
+    private boolean isMatrixAndNumber(ValueContainer value, ValueContainer value2) {
+        return (value.getInputType() == InputType.MATRIX && value2.getInputType() == InputType.NUMBER) ||
+                (value.getInputType() == InputType.NUMBER && value2.getInputType() == InputType.MATRIX);
+    }
+
+    private boolean isMatrixAndVector(ValueContainer value, ValueContainer value2) {
+        return (value.getInputType() == InputType.MATRIX && value2.getInputType() == InputType.VECTOR) ||
+                (value.getInputType() == InputType.VECTOR && value2.getInputType() == InputType.MATRIX);
+    }
+
+    private boolean isMatrixAndMatrix(ValueContainer value, ValueContainer value2) {
+        return value.getInputType() == InputType.MATRIX && value2.getInputType() == InputType.MATRIX;
+    }
+
+    private boolean isVectorAndVector(ValueContainer value, ValueContainer value2) {
+        return value.getInputType() == InputType.VECTOR && value2.getInputType() == InputType.VECTOR;
+    }
+
+    private boolean isVectorAndNumber(ValueContainer value, ValueContainer value2) {
+        return (value.getInputType() == InputType.VECTOR && value2.getInputType() == InputType.NUMBER) ||
+                (value.getInputType() == InputType.NUMBER && value2.getInputType() == InputType.VECTOR);
+    }
+
+    private boolean isNumberAndNumber(ValueContainer value, ValueContainer value2) {
+        return value.getInputType() == InputType.NUMBER && value2.getInputType() == InputType.NUMBER;
+    }
+
+    private boolean isOnlyNumber(Deque<ValueContainer> deque, ValueContainer value) {
+        return deque.size() == 1 && value.getInputType() == InputType.NUMBER;
+    }
+
+    public Object calculate(Deque<ValueContainer> deque, int selected) throws OperationNotSupportedException {
+        final var calculator = select(deque);
+        return calculator.calculate(deque, selected);
+    }
+
+    public List<String> suggest(Deque<ValueContainer> deque) throws OperationNotSupportedException {
+        final var calculator = select(deque);
+        return calculator.suggest();
     }
 }
