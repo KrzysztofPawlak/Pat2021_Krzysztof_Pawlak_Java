@@ -80,7 +80,7 @@ public class RealNumbersCalculator implements Calculator {
     }
 
     public BigDecimal exp(BigDecimal number, int exponent) {
-        if (number.compareTo(BigDecimal.valueOf(AppConfig.MAX_EXPONENT_VALUE)) > 0) {
+        if (exponent > AppConfig.MAX_EXPONENT_VALUE) {
             throw new IllegalArgumentException("Sorry, max supported exponent is: " + AppConfig.MAX_EXPONENT_VALUE);
         }
         return number.pow(exponent).stripTrailingZeros();

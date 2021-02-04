@@ -1,6 +1,7 @@
 package com.krzysztof.pawlak.calculators.real;
 
 import com.krzysztof.pawlak.calculators.Calculator;
+import com.krzysztof.pawlak.config.AppConfig;
 import com.krzysztof.pawlak.models.ValueContainer;
 
 import java.math.BigDecimal;
@@ -47,6 +48,9 @@ public class SqrtCalculator implements Calculator {
     }
 
     public BigDecimal sqrt(BigDecimal number) {
+        if (number.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Sorry, it's not possible get square from negative number.");
+        }
         return number.sqrt(new MathContext(10));
     }
 

@@ -14,6 +14,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import static com.krzysztof.pawlak.models.Help.showOptions;
@@ -30,7 +31,7 @@ public class Application {
     private static final int MAX_MEMORY_SLOT = 2;
     private static final int ELEMENTS_IN_MEMORY_FOR_EXTENDED_MODE = 1;
     private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
-    private HistoryWriter historyWriter;
+    private final HistoryWriter historyWriter;
 
     public Application() {
         this.inputParse = new InputParse();
@@ -38,7 +39,7 @@ public class Application {
         this.hud = new HUD();
         this.calculatorSelector = new CalculatorSelector();
         this.historyWriter = new HistoryWriter();
-//        LogManager.getLogManager().reset();
+        loggerOnOff();
     }
 
     public void execute(String input) {
@@ -58,7 +59,7 @@ public class Application {
         }
     }
 
-    private boolean handleIfAdditionalOptionIsSelected(String input) throws OperationNotSupportedException {
+    private boolean handleIfAdditionalOptionIsSelected(String input) {
         switch (input) {
             case "c1":
                 removeFirstElementFromMemoryIfNeeded();
@@ -175,7 +176,6 @@ public class Application {
         final List<String> suggestions = calculatorSelector.suggest(deque);
         hud.printSuggestions(suggestions);
         mode = Mode.OPTION_SELECTED;
-        System.out.println("Select one of the displayed options.");
     }
 
     private ValueContainer calculate(int option) throws OperationNotSupportedException {
@@ -237,10 +237,11 @@ public class Application {
     }
 
     private void showCurrentMemoryIfNeeded() {
-        if (!deque.isEmpty()) {
-            hud.showMemory(deque);
-        } else {
-            System.out.println("Memory is empty.");
-        }
+        hud.showMemory(deque);
+    }
+
+    private void loggerOnOff() {
+        if (!AppConfig.IS_LOGGER_ON)
+            LogManager.getLogManager().reset();
     }
 }

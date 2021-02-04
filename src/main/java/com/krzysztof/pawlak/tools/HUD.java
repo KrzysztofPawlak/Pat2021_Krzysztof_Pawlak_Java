@@ -14,6 +14,7 @@ public class HUD {
 
     public void showMemory(Deque<ValueContainer> deque) {
         if (deque.isEmpty()) {
+            System.out.println("Memory is empty.");
             return;
         }
         var value = deque.peekFirst();
@@ -35,7 +36,7 @@ public class HUD {
             display((BigDecimal[][]) value.getValue());
         }
         if (value.getInputType() == InputType.VECTOR) {
-            display((Vector) value.getValue());
+            display((Vector<BigDecimal>) value.getValue());
         }
         if (value.getInputType() == InputType.NUMBER) {
             System.out.println(" " + value.getValue() + " ");
@@ -51,7 +52,7 @@ public class HUD {
         }
     }
 
-    private void display(Vector vector) {
+    private void display(Vector<BigDecimal> vector) {
         Arrays.stream(vector.toArray()).forEach(value -> System.out.print(" " + value + " "));
         System.out.println();
     }
@@ -59,5 +60,6 @@ public class HUD {
     public void printSuggestions(List<String> suggestions) {
         System.out.println("# options #");
         IntStream.range(0, suggestions.size()).forEach(index -> System.out.println((index + 1) + ". " + suggestions.get(index)));
+        System.out.println("Select one of the displayed options...");
     }
 }
