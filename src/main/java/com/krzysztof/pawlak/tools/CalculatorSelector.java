@@ -93,4 +93,9 @@ public class CalculatorSelector {
         final var calculator = select(deque);
         return calculator.suggest();
     }
+
+    public String getOperationByPosition(Deque<ValueContainer> deque, int position) throws OperationNotSupportedException {
+        final var calculator = select(deque);
+        return calculator.getOperationNameAsString(position);
+    }
 }

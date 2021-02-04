@@ -53,6 +53,11 @@ public class VectorByNumberCalculator implements Calculator {
     }
 
     @Override
+    public String getOperationNameAsString(int selected) {
+        return Operations.valueOf(selected).toString();
+    }
+
+    @Override
     public List<String> suggest() {
         return Stream.of(Operations.values()).map(Enum::toString).collect(Collectors.toList());
     }

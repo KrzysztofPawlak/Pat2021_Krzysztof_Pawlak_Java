@@ -1,12 +1,10 @@
 package com.krzysztof.pawlak;
 
 import com.krzysztof.pawlak.config.AppConfig;
-import com.krzysztof.pawlak.models.CalculationMode;
-import com.krzysztof.pawlak.models.InputType;
-import com.krzysztof.pawlak.models.Mode;
-import com.krzysztof.pawlak.models.ValueContainer;
+import com.krzysztof.pawlak.models.*;
 import com.krzysztof.pawlak.tools.CalculatorSelector;
 import com.krzysztof.pawlak.tools.HUD;
+import com.krzysztof.pawlak.tools.HistoryWriter;
 import com.krzysztof.pawlak.tools.InputParse;
 
 import javax.naming.OperationNotSupportedException;
@@ -16,7 +14,6 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import static com.krzysztof.pawlak.models.Help.showOptions;
@@ -33,21 +30,23 @@ public class Application {
     private static final int MAX_MEMORY_SLOT = 2;
     private static final int ELEMENTS_IN_MEMORY_FOR_EXTENDED_MODE = 1;
     private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
+    private HistoryWriter historyWriter;
 
     public Application() {
         this.inputParse = new InputParse();
         this.deque = new ArrayDeque<>();
         this.hud = new HUD();
         this.calculatorSelector = new CalculatorSelector();
+        this.historyWriter = new HistoryWriter();
 //        LogManager.getLogManager().reset();
     }
 
     public void execute(String input) {
         try {
             if (handleIfAdditionalOptionIsSelected(input)) {
+                suggestEnterData();
                 return;
             }
-            shouldSwitchToExtendedMode(input);
             if (calculationMode == CalculationMode.EXTENDED) {
                 handleExtendedMode(input);
             } else {
@@ -62,41 +61,28 @@ public class Application {
     private boolean handleIfAdditionalOptionIsSelected(String input) throws OperationNotSupportedException {
         switch (input) {
             case "c1":
-                if (deque.peekFirst() != null) {
-                    deque.removeFirst();
-                    mode = Mode.INPUT;
-                }
-                suggestEnterData();
+                removeFirstElementFromMemoryIfNeeded();
                 return true;
             case "c2":
-                if (deque.peekLast() != null) {
-                    deque.removeLast();
-                    mode = Mode.INPUT;
-                }
-                suggestEnterData();
+                removeLastElementFromMemoryIfNeeded();
                 return true;
             case "c":
-                if (!deque.isEmpty()) {
-                    deque.clear();
-                    mode = Mode.INPUT;
-                }
-                suggestEnterData();
+                clearMemoryIfNeeded();
                 return true;
             case "h":
                 showOptions();
-                suggestEnterData();
                 return true;
             case "s":
                 showSyntaxGuide();
-                suggestEnterData();
                 return true;
             case "v":
-                if (!deque.isEmpty()) {
-                    hud.showMemory(deque);
-                } else {
-                    System.out.println("Memory is empty.");
+                showCurrentMemoryIfNeeded();
+                return true;
+            case "o":
+                if (shouldSwitchToExtendedMode()) {
+                    switchToExtendedMode();
+                    return false;
                 }
-                suggestEnterData();
                 return true;
             default:
                 return false;
@@ -194,6 +180,8 @@ public class Application {
 
     private ValueContainer calculate(int option) throws OperationNotSupportedException {
         final var valueContainer = new ValueContainer(calculatorSelector.calculate(deque, option));
+        final var operation = calculatorSelector.getOperationByPosition(deque, option);
+        historyWriter.writeEntry(deque, valueContainer, OperationChar.valueOf(operation).getRepresentation());
         deque.clear();
         deque.add(valueContainer);
         return valueContainer;
@@ -218,12 +206,41 @@ public class Application {
         hud.printElementFromMemory(valueContainer, deque.size());
     }
 
-    public void shouldSwitchToExtendedMode(String input) {
-        final boolean isExtendedMode = deque.size() == ELEMENTS_IN_MEMORY_FOR_EXTENDED_MODE &&
-                deque.peek().getInputType() == InputType.NUMBER && input.equals("o");
-        if (isExtendedMode) {
-            calculationMode = CalculationMode.EXTENDED;
-            mode = Mode.SELECTION;
+    private boolean shouldSwitchToExtendedMode() {
+        return deque.size() == ELEMENTS_IN_MEMORY_FOR_EXTENDED_MODE && deque.peek().getInputType() == InputType.NUMBER;
+    }
+
+    private void switchToExtendedMode() {
+        calculationMode = CalculationMode.EXTENDED;
+        mode = Mode.SELECTION;
+    }
+
+    private void removeFirstElementFromMemoryIfNeeded() {
+        if (deque.peekFirst() != null) {
+            deque.removeFirst();
+            mode = Mode.INPUT;
+        }
+    }
+
+    private void removeLastElementFromMemoryIfNeeded() {
+        if (deque.peekLast() != null) {
+            deque.removeLast();
+            mode = Mode.INPUT;
+        }
+    }
+
+    private void clearMemoryIfNeeded() {
+        if (!deque.isEmpty()) {
+            deque.clear();
+            mode = Mode.INPUT;
+        }
+    }
+
+    private void showCurrentMemoryIfNeeded() {
+        if (!deque.isEmpty()) {
+            hud.showMemory(deque);
+        } else {
+            System.out.println("Memory is empty.");
         }
     }
 }

@@ -47,6 +47,11 @@ public class MatrixByVectorCalculator implements Calculator {
         }
     }
 
+    @Override
+    public String getOperationNameAsString(int selected) {
+        return Operations.valueOf(selected).toString();
+    }
+
     public Vector<BigDecimal> multiply(BigDecimal[][] matrix, Vector<BigDecimal> vector) {
         return Arrays.stream(matrix).map(row ->
                 IntStream.range(0, row.length)
