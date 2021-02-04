@@ -218,13 +218,15 @@ public class Application {
     private void removeFirstElementFromMemoryIfNeeded() {
         if (deque.peekFirst() != null) {
             deque.removeFirst();
+            System.out.println("memory1 cleared");
             mode = Mode.INPUT;
         }
     }
 
     private void removeLastElementFromMemoryIfNeeded() {
-        if (deque.peekLast() != null) {
+        if (deque.peekLast() != null && deque.size() > 1) {
             deque.removeLast();
+            System.out.println("memory2 cleared");
             mode = Mode.INPUT;
         }
     }
@@ -232,6 +234,7 @@ public class Application {
     private void clearMemoryIfNeeded() {
         if (!deque.isEmpty()) {
             deque.clear();
+            System.out.println("memory cleared");
             mode = Mode.INPUT;
         }
     }
