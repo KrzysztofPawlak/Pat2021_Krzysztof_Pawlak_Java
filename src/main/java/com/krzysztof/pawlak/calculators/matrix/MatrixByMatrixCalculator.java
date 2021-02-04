@@ -36,15 +36,15 @@ public class MatrixByMatrixCalculator implements Calculator {
 
     public BigDecimal[][] calculate(Deque<ValueContainer> deque, int operation) {
         final var selectedOperation = Operations.valueOf(operation);
-        final var value = deque.peekFirst();
-        final var value2 = deque.peekLast();
+        final var value = (BigDecimal[][]) deque.peekFirst().getValue();
+        final var value2 = (BigDecimal[][]) deque.peekLast().getValue();
         switch (selectedOperation) {
             case ADD:
-                return add((BigDecimal[][]) value.getValue(), (BigDecimal[][]) value2.getValue());
+                return add(value, value2);
             case SUBTRACT:
-                return subtract((BigDecimal[][]) value.getValue(), (BigDecimal[][]) value2.getValue());
+                return subtract(value, value2);
             case MULTIPLY:
-                return multiply((BigDecimal[][]) value.getValue(), (BigDecimal[][]) value2.getValue());
+                return multiply(value, value2);
             default:
                 throw new UnsupportedOperationException();
         }
@@ -52,7 +52,8 @@ public class MatrixByMatrixCalculator implements Calculator {
 
     public BigDecimal[][] add(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
         if (matrix.length != matrix2.length || matrix[0].length != matrix2[0].length) {
-            throw new IllegalArgumentException("Sorry, it's not possible to add matrices with different rows and columns length.");
+            throw new IllegalArgumentException(
+                    "Sorry, it's not possible to add matrices with different rows and columns length.");
         }
         return IntStream.range(0, matrix.length)
                 .mapToObj(rowIndex -> IntStream.range(0, matrix[rowIndex].length)
@@ -63,7 +64,8 @@ public class MatrixByMatrixCalculator implements Calculator {
 
     public BigDecimal[][] subtract(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
         if (matrix.length != matrix2.length || matrix[0].length != matrix2[0].length) {
-            throw new IllegalArgumentException("Sorry, it's not possible to subtract matrices with different rows and columns length.");
+            throw new IllegalArgumentException(
+                    "Sorry, it's not possible to subtract matrices with different rows and columns length.");
         }
         return IntStream.range(0, matrix.length)
                 .mapToObj(rowIndex -> IntStream.range(0, matrix[rowIndex].length)
@@ -74,7 +76,8 @@ public class MatrixByMatrixCalculator implements Calculator {
 
     public BigDecimal[][] multiply(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
         if (matrix.length != matrix2[0].length || matrix[0].length != matrix2.length) {
-            throw new IllegalArgumentException("Sorry, it's not possible to multiply matrices with this rows and columns length.");
+            throw new IllegalArgumentException(
+                    "Sorry, it's not possible to multiply matrices with this rows and columns length.");
         }
         return Arrays.stream(matrix).map(row ->
                 IntStream.range(0, matrix2[0].length)

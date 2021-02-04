@@ -1,5 +1,6 @@
 package com.krzysztof.pawlak;
 
+import com.krzysztof.pawlak.config.AppConfig;
 import com.krzysztof.pawlak.models.CalculationMode;
 import com.krzysztof.pawlak.models.InputType;
 import com.krzysztof.pawlak.models.Mode;
@@ -9,9 +10,11 @@ import com.krzysztof.pawlak.tools.HUD;
 import com.krzysztof.pawlak.tools.InputParse;
 
 import javax.naming.OperationNotSupportedException;
+import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +32,7 @@ public class Application {
 
     public Application() {
         this.inputParse = new InputParse();
-        this.deque = new ArrayDeque();
+        this.deque = new ArrayDeque<>();
         this.hud = new HUD();
         this.calculatorSelector = new CalculatorSelector();
     }
@@ -45,6 +48,24 @@ public class Application {
         } catch (IllegalArgumentException | OperationNotSupportedException e) {
             LOGGER.log(Level.WARNING, e.getMessage());
             System.out.println(e.getMessage());
+        }
+    }
+
+    private void validInputSizeThrowException(ValueContainer value) {
+        if (value.getInputType() == InputType.MATRIX) {
+            final int rows = ((BigDecimal[][]) value.getValue()).length;
+            final int columns = ((BigDecimal[][]) value.getValue())[0].length;
+            if (rows > AppConfig.MAX_MATRIX_ROWS || columns > AppConfig.MAX_MATRIX_COLUMNS) {
+                throw new IllegalArgumentException("Sorry, max supported matrix size is: " +
+                        AppConfig.MAX_MATRIX_ROWS + "x" + AppConfig.MAX_MATRIX_COLUMNS + ".");
+            }
+        }
+        if (value.getInputType() == InputType.VECTOR) {
+            final int size = ((Vector<BigDecimal>) value.getValue()).size();
+            if (size > AppConfig.MAX_VECTOR_LENGTH) {
+                throw new IllegalArgumentException("Sorry, max supported vector length is: " +
+                        AppConfig.MAX_VECTOR_LENGTH + ".");
+            }
         }
     }
 
@@ -68,7 +89,7 @@ public class Application {
     private void handleExtendedMode(String input) throws OperationNotSupportedException {
         if (mode == Mode.SELECTION) {
             LOGGER.log(Level.INFO, "SELECTION");
-            suggest();
+            suggestOptions();
             return;
         }
         if (mode == Mode.OPTION_SELECTED) {
@@ -101,14 +122,14 @@ public class Application {
         }
         if (deque.size() == MAX_MEMORY_SLOT) {
             LOGGER.log(Level.INFO, "MAX_MEMORY_SLOT");
-            suggest();
+            suggestOptions();
         }
         if (deque.size() == 1 && deque.peek().getInputType() != InputType.NUMBER) {
             System.out.println("Enter some data.");
         }
     }
 
-    private void suggest() throws OperationNotSupportedException {
+    private void suggestOptions() throws OperationNotSupportedException {
         final List<String> suggestions = calculatorSelector.suggest(deque);
         hud.printSuggestions(suggestions);
         mode = Mode.OPTION_SELECTED;
@@ -133,9 +154,10 @@ public class Application {
 
     private void addDataToMemory(String input) {
         LOGGER.log(Level.INFO, "addDataToMemory");
-        inputParse.isValidThrowException(input);
+        inputParse.isValidSyntaxThrowException(input);
         final var object = inputParse.parse(input);
         final var valueContainer = new ValueContainer(object);
+        validInputSizeThrowException(valueContainer);
         deque.addLast(valueContainer);
         hud.printElementFromMemory(valueContainer, deque.size());
     }

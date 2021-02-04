@@ -22,9 +22,10 @@ public class InputParse {
         return input.matches(ONLY_ONE_NUMBER);
     }
 
-    public void isValidThrowException(String input) {
+    public void isValidSyntaxThrowException(String input) {
         if (!isValid(input)) {
-            throw new IllegalArgumentException("Sorry it's not a number, vector or matrix. Please try again or enter \"h\" to show help.");
+            throw new IllegalArgumentException(
+                    "Sorry it's not a number, vector or matrix. Please try again or enter \"h\" to show help.");
         }
     }
 
@@ -42,7 +43,7 @@ public class InputParse {
                 final String[] firstRow = rows[0].split(" ");
                 final int rowsCount = rows.length;
                 final int columnsCount = clearEmptyElements(firstRow).length;
-                if (isRowOrColumnVector(columnsCount)) {
+                if (isVectorColumn(columnsCount)) {
                     return parseToVectorColumn(rows);
                 }
                 if (isMatrix(rowsCount, columnsCount)) {
@@ -51,7 +52,7 @@ public class InputParse {
             }
             return BigDecimal.valueOf(Double.parseDouble(input));
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Can't parse input");
+            throw new IllegalArgumentException("Can't parse input.");
         }
     }
 
@@ -97,9 +98,9 @@ public class InputParse {
         return rowsCount > minimalRowsAndColumns && columnsCount > minimalRowsAndColumns;
     }
 
-    private boolean isRowOrColumnVector(int size) {
-        final int minimalRowsOrColumns = 1;
-        return size == minimalRowsOrColumns;
+    private boolean isVectorColumn(int size) {
+        final int minimalColumns = 1;
+        return size == minimalColumns;
     }
 
     private String clearSquareBrackets(String input) {
