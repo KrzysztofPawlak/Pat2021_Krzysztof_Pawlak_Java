@@ -16,7 +16,11 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
+import static com.krzysztof.pawlak.models.Help.showOptions;
+import static com.krzysztof.pawlak.models.Help.showSyntaxGuide;
 
 public class Application {
 
@@ -35,10 +39,14 @@ public class Application {
         this.deque = new ArrayDeque<>();
         this.hud = new HUD();
         this.calculatorSelector = new CalculatorSelector();
+//        LogManager.getLogManager().reset();
     }
 
     public void execute(String input) {
         try {
+            if (handleIfAdditionalOptionIsSelected(input)) {
+                return;
+            }
             shouldSwitchToExtendedMode(input);
             if (calculationMode == CalculationMode.EXTENDED) {
                 handleExtendedMode(input);
@@ -48,6 +56,50 @@ public class Application {
         } catch (IllegalArgumentException | OperationNotSupportedException e) {
             LOGGER.log(Level.WARNING, e.getMessage());
             System.out.println(e.getMessage());
+        }
+    }
+
+    private boolean handleIfAdditionalOptionIsSelected(String input) throws OperationNotSupportedException {
+        switch (input) {
+            case "c1":
+                if (deque.peekFirst() != null) {
+                    deque.removeFirst();
+                    mode = Mode.INPUT;
+                }
+                suggestEnterData();
+                return true;
+            case "c2":
+                if (deque.peekLast() != null) {
+                    deque.removeLast();
+                    mode = Mode.INPUT;
+                }
+                suggestEnterData();
+                return true;
+            case "c":
+                if (!deque.isEmpty()) {
+                    deque.clear();
+                    mode = Mode.INPUT;
+                }
+                suggestEnterData();
+                return true;
+            case "h":
+                showOptions();
+                suggestEnterData();
+                return true;
+            case "s":
+                showSyntaxGuide();
+                suggestEnterData();
+                return true;
+            case "v":
+                if (!deque.isEmpty()) {
+                    hud.showMemory(deque);
+                } else {
+                    System.out.println("Memory is empty.");
+                }
+                suggestEnterData();
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -99,6 +151,7 @@ public class Application {
             hud.printElementFromMemory(valueContainer, deque.size());
             mode = Mode.INPUT;
             calculationMode = CalculationMode.NORMAL;
+            suggestEnterData();
             return;
         }
         if (mode == Mode.INPUT) {
@@ -125,6 +178,9 @@ public class Application {
             suggestOptions();
         }
         if (deque.size() == 1 && deque.peek().getInputType() != InputType.NUMBER) {
+            System.out.println("Enter some data.");
+        }
+        if (deque.isEmpty()) {
             System.out.println("Enter some data.");
         }
     }

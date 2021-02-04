@@ -48,12 +48,18 @@ public class VectorByVectorCalculator implements Calculator {
     }
 
     public Vector<BigDecimal> add(Vector<BigDecimal> vector, Vector<BigDecimal> vector2) {
+        if (vector.size() != vector2.size()) {
+            throw new IllegalArgumentException("Sorry, it's not possible to add vectors with different length.");
+        }
         return IntStream.range(0, vector.size())
                 .mapToObj(position -> vector.get(position).add(vector2.get(position)))
                 .collect(Collectors.toCollection(Vector::new));
     }
 
     public Vector<BigDecimal> subtract(Vector<BigDecimal> vector, Vector<BigDecimal> vector2) {
+        if (vector.size() != vector2.size()) {
+            throw new IllegalArgumentException("Sorry, it's not possible to subtract vectors with different length.");
+        }
         return IntStream.range(0, vector.size())
                 .mapToObj(position -> vector.get(position).subtract(vector2.get(position)))
                 .collect(Collectors.toCollection(Vector::new));
