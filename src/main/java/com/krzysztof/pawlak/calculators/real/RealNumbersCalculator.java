@@ -5,6 +5,7 @@ import com.krzysztof.pawlak.config.AppConfig;
 import com.krzysztof.pawlak.models.ValueContainer;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +77,7 @@ public class RealNumbersCalculator implements Calculator {
         if (number2.compareTo(BigDecimal.ZERO) == 0) {
             throw new IllegalArgumentException("Cannot divide by zero!!!");
         }
-        return number.divide(number2).stripTrailingZeros();
+        return number.divide(number2, MathContext.DECIMAL128).stripTrailingZeros();
     }
 
     public BigDecimal exp(BigDecimal number, int exponent) {
