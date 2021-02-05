@@ -35,7 +35,7 @@ public class Application {
 
     public Application() {
         this.inputParse = new InputParse();
-        this.deque = new ArrayDeque<>();
+        this.deque = new ArrayDeque<>(MAX_MEMORY_SLOT);
         this.hud = new HUD();
         this.calculatorSelector = new CalculatorSelector();
         this.historyWriter = new HistoryWriter();
@@ -190,10 +190,14 @@ public class Application {
     private int getOption(String input) throws OperationNotSupportedException {
         LOGGER.log(Level.INFO, "parse option to selected option number");
         final int option = returnOptionIfValid(input);
-        if (option > calculatorSelector.suggest(deque).size() || option < 1) {
+        if (isRangeAccepted(option)) {
             throw new IllegalArgumentException("Selected option is not available. Enter again.");
         }
         return option;
+    }
+
+    private boolean isRangeAccepted(int option) throws OperationNotSupportedException {
+        return option > calculatorSelector.suggest(deque).size() || option < 1;
     }
 
     private void addDataToMemory(String input) {
@@ -202,8 +206,14 @@ public class Application {
         final var object = inputParse.parse(input);
         final var valueContainer = new ValueContainer(object);
         validInputSizeThrowException(valueContainer);
-        deque.addLast(valueContainer);
+        addToMemoryIfPossible(valueContainer);
         hud.printElementFromMemory(valueContainer, deque.size());
+    }
+
+    private void addToMemoryIfPossible(ValueContainer valueContainer) {
+        if (deque.size() < MAX_MEMORY_SLOT) {
+            deque.addLast(valueContainer);
+        }
     }
 
     private boolean shouldSwitchToExtendedMode() {

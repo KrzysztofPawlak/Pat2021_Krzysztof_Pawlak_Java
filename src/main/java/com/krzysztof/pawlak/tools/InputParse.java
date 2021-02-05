@@ -25,7 +25,7 @@ public class InputParse {
     public void isValidSyntaxThrowException(String input) {
         if (!isValid(input)) {
             throw new IllegalArgumentException(
-                    "Sorry it's not a number, vector or matrix. Please try again or enter \"h\" to show help.");
+                    "Sorry it's not a number, vector or matrix. Please try again or enter \"s\" to show help.");
         }
     }
 
@@ -52,7 +52,7 @@ public class InputParse {
             }
             return BigDecimal.valueOf(Double.parseDouble(input));
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Can't parse input.");
+            throw new IllegalArgumentException("Incorrect input. Please try again or enter \"s\" to show syntax guide.");
         }
     }
 

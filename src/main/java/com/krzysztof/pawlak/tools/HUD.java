@@ -39,7 +39,7 @@ public class HUD {
             display((Vector<BigDecimal>) value.getValue());
         }
         if (value.getInputType() == InputType.NUMBER) {
-            System.out.println(" " + value.getValue() + " ");
+            System.out.println(" " + ((BigDecimal) value.getValue()).toPlainString() + " ");
         }
     }
 

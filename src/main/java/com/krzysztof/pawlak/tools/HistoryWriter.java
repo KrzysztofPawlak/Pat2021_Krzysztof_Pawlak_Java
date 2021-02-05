@@ -29,7 +29,7 @@ public class HistoryWriter {
             linesAmount = countLine();
             fileWriter = new FileWriter(FILENAME, true);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("can't open log file");
         }
     }
 
@@ -50,7 +50,7 @@ public class HistoryWriter {
             fileWriter.flush();
             linesAmount++;
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("can't write to log file");
         }
     }
 
@@ -65,7 +65,7 @@ public class HistoryWriter {
                 linesAmount = 0;
                 fileWriter = new FileWriter(FILENAME, true);
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("can't move log file");
             }
         }
     }

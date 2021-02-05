@@ -28,8 +28,12 @@ public class CalculatorSelector {
     private Calculator select(Deque<ValueContainer> deque) throws OperationNotSupportedException {
 
         final var value = deque.peekFirst();
-        if (isOnlyNumber(deque, value)) {
-            return sqrtCalculator;
+        if (deque.size() == 1) {
+            if (isNumber(value)) {
+                return sqrtCalculator;
+            } else {
+                throw new OperationNotSupportedException();
+            }
         }
         final var value2 = deque.peekLast();
         if (isNumberAndNumber(value, value2)) {
@@ -80,8 +84,8 @@ public class CalculatorSelector {
         return value.getInputType() == InputType.NUMBER && value2.getInputType() == InputType.NUMBER;
     }
 
-    private boolean isOnlyNumber(Deque<ValueContainer> deque, ValueContainer value) {
-        return deque.size() == 1 && value.getInputType() == InputType.NUMBER;
+    private boolean isNumber(ValueContainer value) {
+        return value.getInputType() == InputType.NUMBER;
     }
 
     public Object calculate(Deque<ValueContainer> deque, int selected) throws OperationNotSupportedException {

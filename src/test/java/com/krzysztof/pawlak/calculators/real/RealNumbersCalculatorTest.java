@@ -25,7 +25,7 @@ class RealNumbersCalculatorTest {
 
     @Test
     void subtract() {
-        assertEquals(BigDecimal.valueOf(80), realNumbersCalculator.subtract(BigDecimal.valueOf(99), BigDecimal.valueOf(19)));
+        assertEquals(BigDecimal.valueOf(80), realNumbersCalculator.subtract(BigDecimal.valueOf(99), BigDecimal.valueOf(19)).setScale(0));
     }
 
     @Test
