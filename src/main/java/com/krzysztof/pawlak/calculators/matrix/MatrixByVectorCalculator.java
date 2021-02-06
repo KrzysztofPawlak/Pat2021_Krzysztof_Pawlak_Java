@@ -2,6 +2,7 @@ package com.krzysztof.pawlak.calculators.matrix;
 
 import com.krzysztof.pawlak.calculators.Calculator;
 import com.krzysztof.pawlak.models.InputType;
+import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
 
 import java.math.BigDecimal;
@@ -31,9 +32,32 @@ public class MatrixByVectorCalculator implements Calculator {
         static Operations valueOf(int operation) {
             return (Operations) map.get(operation);
         }
+
+        static Operations valueOf(OperationChar operation) {
+            return Arrays.stream(Operations.values())
+                    .filter(enumOperation -> enumOperation.toString().equals(operation.toString()))
+                    .findFirst()
+                    .orElseThrow(IllegalArgumentException::new);
+        }
     }
 
+    @Override
     public Vector<BigDecimal> calculate(Deque<ValueContainer> deque, int operation) {
+        final var selectedOperation = Operations.valueOf(operation);
+        final var value = deque.peekFirst();
+        final var value2 = deque.peekLast();
+        switch (selectedOperation) {
+            case MULTIPLY:
+                return (value.getInputType() == InputType.MATRIX && value2.getInputType() == InputType.VECTOR) ?
+                        multiply((BigDecimal[][]) value.getValue(), (Vector<BigDecimal>) value2.getValue()) :
+                        multiply((BigDecimal[][]) value2.getValue(), (Vector<BigDecimal>) value.getValue());
+            default:
+                throw new UnsupportedOperationException();
+        }
+    }
+
+    @Override
+    public Object calculate(Deque<ValueContainer> deque, OperationChar operation) {
         final var selectedOperation = Operations.valueOf(operation);
         final var value = deque.peekFirst();
         final var value2 = deque.peekLast();

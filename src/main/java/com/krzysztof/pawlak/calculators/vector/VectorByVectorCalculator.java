@@ -1,6 +1,7 @@
 package com.krzysztof.pawlak.calculators.vector;
 
 import com.krzysztof.pawlak.calculators.Calculator;
+import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
 
 import java.math.BigDecimal;
@@ -31,9 +32,31 @@ public class VectorByVectorCalculator implements Calculator {
         static Operations valueOf(int operation) {
             return (Operations) map.get(operation);
         }
+
+        static Operations valueOf(OperationChar operation) {
+            return Arrays.stream(Operations.values())
+                    .filter(enumOperation -> enumOperation.toString().equals(operation.toString()))
+                    .findFirst().orElseThrow(IllegalArgumentException::new);
+        }
     }
 
+    @Override
     public Vector<BigDecimal> calculate(Deque<ValueContainer> deque, int operation) {
+        final var selectedOperation = Operations.valueOf(operation);
+        final var value = (Vector<BigDecimal>) deque.peekFirst().getValue();
+        final var value2 = (Vector<BigDecimal>) deque.peekLast().getValue();
+        switch (selectedOperation) {
+            case ADD:
+                return add(value, value2);
+            case SUBTRACT:
+                return subtract(value, value2);
+            default:
+                throw new UnsupportedOperationException();
+        }
+    }
+
+    @Override
+    public Object calculate(Deque<ValueContainer> deque, OperationChar operation) {
         final var selectedOperation = Operations.valueOf(operation);
         final var value = (Vector<BigDecimal>) deque.peekFirst().getValue();
         final var value2 = (Vector<BigDecimal>) deque.peekLast().getValue();

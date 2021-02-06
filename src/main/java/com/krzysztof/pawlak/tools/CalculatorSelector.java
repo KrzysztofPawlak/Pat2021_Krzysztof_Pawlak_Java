@@ -9,12 +9,15 @@ import com.krzysztof.pawlak.calculators.real.SqrtCalculator;
 import com.krzysztof.pawlak.calculators.vector.VectorByNumberCalculator;
 import com.krzysztof.pawlak.calculators.vector.VectorByVectorCalculator;
 import com.krzysztof.pawlak.models.InputType;
+import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
+import org.springframework.stereotype.Service;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.Deque;
 import java.util.List;
 
+@Service
 public class CalculatorSelector {
 
     private static final MatrixByMatrixCalculator matrixByMatrixCalculator = new MatrixByMatrixCalculator();
@@ -89,6 +92,11 @@ public class CalculatorSelector {
     }
 
     public Object calculate(Deque<ValueContainer> deque, int selected) throws OperationNotSupportedException {
+        final var calculator = select(deque);
+        return calculator.calculate(deque, selected);
+    }
+
+    public Object calculate(Deque<ValueContainer> deque, OperationChar selected) throws OperationNotSupportedException {
         final var calculator = select(deque);
         return calculator.calculate(deque, selected);
     }

@@ -96,3 +96,18 @@ v - show current values in memory
 h - show help  
 s - syntax guide  
 o - extended mode for sqrt (only available when one number in memory is present)  
+
+# Calculation
+
+## add - POST
+
+example: `localhost:8080/add`
+
+```
+{
+    "values" : [
+        "[2 4;4 5]",
+        "[2 4;4 5]"
+    ]
+}
+```

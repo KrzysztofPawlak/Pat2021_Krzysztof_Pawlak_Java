@@ -1,15 +1,12 @@
 package com.krzysztof.pawlak.calculators.real;
 
 import com.krzysztof.pawlak.calculators.Calculator;
-import com.krzysztof.pawlak.config.AppConfig;
+import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,8 +31,16 @@ public class SqrtCalculator implements Calculator {
         static Operations valueOf(int operation) {
             return (Operations) map.get(operation);
         }
+
+        static Operations valueOf(OperationChar operation) {
+            return Arrays.stream(Operations.values())
+                    .filter(enumOperation -> enumOperation.toString().equals(operation.toString()))
+                    .findFirst()
+                    .orElseThrow(IllegalArgumentException::new);
+        }
     }
 
+    @Override
     public BigDecimal calculate(Deque<ValueContainer> deque, int operation) {
         final var selectedOperation = Operations.valueOf(operation);
         final var value = (BigDecimal) deque.peekFirst().getValue();
@@ -45,6 +50,11 @@ public class SqrtCalculator implements Calculator {
             default:
                 throw new UnsupportedOperationException();
         }
+    }
+
+    @Override
+    public Object calculate(Deque<ValueContainer> deque, OperationChar operation) {
+        return null;
     }
 
     public BigDecimal sqrt(BigDecimal number) {
