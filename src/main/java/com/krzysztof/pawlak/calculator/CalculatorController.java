@@ -18,51 +18,55 @@ public class CalculatorController {
 
     private final CalculatorSelector calculatorSelector;
     private final InputConverter inputConverter;
+    private final OutputConverter outputConverter;
 
-    public CalculatorController(CalculatorSelector calculatorSelector, InputConverter inputConverter) {
+    public CalculatorController(CalculatorSelector calculatorSelector,
+                                InputConverter inputConverter,
+                                OutputConverter outputConverter) {
         this.calculatorSelector = calculatorSelector;
         this.inputConverter = inputConverter;
+        this.outputConverter = outputConverter;
     }
 
     @PostMapping("/add")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Object add(@RequestBody Input input) throws OperationNotSupportedException {
+    public String add(@RequestBody Input input) throws OperationNotSupportedException {
         Deque<ValueContainer> values = inputConverter.convert(input);
-        return calculatorSelector.calculate(values, OperationChar.ADD);
+        return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.ADD)));
     }
 
     @PostMapping("/subtract")
     @ResponseStatus(value = HttpStatus.CREATED)
     public Object subtract(@RequestBody Input input) throws OperationNotSupportedException {
         Deque<ValueContainer> values = inputConverter.convert(input);
-        return calculatorSelector.calculate(values, OperationChar.SUBTRACT);
+        return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.SUBTRACT)));
     }
 
     @PostMapping("/multiply")
     @ResponseStatus(value = HttpStatus.CREATED)
     public Object multiply(@RequestBody Input input) throws OperationNotSupportedException {
         Deque<ValueContainer> values = inputConverter.convert(input);
-        return calculatorSelector.calculate(values, OperationChar.MULTIPLY);
+        return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.MULTIPLY)));
     }
 
     @PostMapping("/divide")
     @ResponseStatus(value = HttpStatus.CREATED)
     public Object divide(@RequestBody Input input) throws OperationNotSupportedException {
         Deque<ValueContainer> values = inputConverter.convert(input);
-        return calculatorSelector.calculate(values, OperationChar.DIVIDE);
+        return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.DIVIDE)));
     }
 
     @PostMapping("/exponential")
     @ResponseStatus(value = HttpStatus.CREATED)
     public Object exponential(@RequestBody Input input) throws OperationNotSupportedException {
         Deque<ValueContainer> values = inputConverter.convert(input);
-        return calculatorSelector.calculate(values, OperationChar.EXP);
+        return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.EXP)));
     }
 
     @PostMapping("/sqrt")
     @ResponseStatus(value = HttpStatus.CREATED)
     public Object sqrt(@RequestBody Input input) throws OperationNotSupportedException {
         Deque<ValueContainer> values = inputConverter.convert(input);
-        return calculatorSelector.calculate(values, OperationChar.SQRT);
+        return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.SQRT)));
     }
 }
