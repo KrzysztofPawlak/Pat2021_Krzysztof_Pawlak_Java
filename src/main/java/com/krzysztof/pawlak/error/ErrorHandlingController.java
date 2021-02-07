@@ -20,4 +20,13 @@ public class ErrorHandlingController {
                 .status(HttpStatus.NOT_IMPLEMENTED)
                 .body(exceptionResponse);
     }
+
+    @ExceptionHandler(CalculationNotImplementedException.class)
+    public ResponseEntity<ExceptionResponse> notFoundException(CalculationNotImplementedException e) {
+        var exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setDescription(e.getDescription());
+        return ResponseEntity
+                .status(HttpStatus.NOT_IMPLEMENTED)
+                .body(exceptionResponse);
+    }
 }

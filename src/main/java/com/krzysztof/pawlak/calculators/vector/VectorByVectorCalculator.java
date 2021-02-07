@@ -1,6 +1,7 @@
 package com.krzysztof.pawlak.calculators.vector;
 
 import com.krzysztof.pawlak.calculators.Calculator;
+import com.krzysztof.pawlak.error.CalculationNotImplementedException;
 import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
 
@@ -36,7 +37,8 @@ public class VectorByVectorCalculator implements Calculator {
         static Operations valueOf(OperationChar operation) {
             return Arrays.stream(Operations.values())
                     .filter(enumOperation -> enumOperation.toString().equals(operation.toString()))
-                    .findFirst().orElseThrow(IllegalArgumentException::new);
+                    .findFirst()
+                    .orElseThrow(CalculationNotImplementedException::new);
         }
     }
 

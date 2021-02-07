@@ -1,6 +1,7 @@
 package com.krzysztof.pawlak.calculators.matrix;
 
 import com.krzysztof.pawlak.calculators.Calculator;
+import com.krzysztof.pawlak.error.CalculationNotImplementedException;
 import com.krzysztof.pawlak.models.InputType;
 import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
@@ -36,7 +37,7 @@ public class MatrixByNumberCalculator implements Calculator {
             return Arrays.stream(Operations.values())
                     .filter(enumOperation -> enumOperation.toString().equals(operation.toString()))
                     .findFirst()
-                    .orElseThrow(IllegalArgumentException::new);
+                    .orElseThrow(CalculationNotImplementedException::new);
         }
     }
 
