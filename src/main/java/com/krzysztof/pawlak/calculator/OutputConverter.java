@@ -2,6 +2,7 @@ package com.krzysztof.pawlak.calculator;
 
 import com.krzysztof.pawlak.models.InputType;
 import com.krzysztof.pawlak.models.ValueContainer;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -10,8 +11,9 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 
 @Component
-public class OutputConverter {
+public class OutputConverter implements Converter<ValueContainer, String> {
 
+    @Override
     public String convert(ValueContainer value) {
         if (value.getInputType() == InputType.NUMBER) {
             return value.getValue().toString();

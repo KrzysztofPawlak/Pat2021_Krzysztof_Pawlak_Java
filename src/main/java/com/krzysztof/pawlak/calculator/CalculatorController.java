@@ -4,11 +4,9 @@ import com.krzysztof.pawlak.models.Input;
 import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
 import com.krzysztof.pawlak.tools.CalculatorSelector;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.Deque;
@@ -68,5 +66,10 @@ public class CalculatorController {
     public Object sqrt(@RequestBody Input input) throws OperationNotSupportedException {
         Deque<ValueContainer> values = inputConverter.convert(input);
         return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.SQRT)));
+    }
+
+    @GetMapping("/info")
+    public HttpEntity<byte[]> info() {
+        return calculatorSelector.getInfo();
     }
 }

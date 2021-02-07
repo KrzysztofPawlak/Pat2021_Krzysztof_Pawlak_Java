@@ -13,7 +13,7 @@ import javax.naming.OperationNotSupportedException;
 public class ErrorHandlingController {
 
     @ExceptionHandler(OperationNotSupportedException.class)
-    public ResponseEntity<ExceptionResponse> notFoundException(OperationNotSupportedException e) {
+    public ResponseEntity<ExceptionResponse> operationNotSupportedException(OperationNotSupportedException e) {
         var exceptionResponse = new ExceptionResponse();
         exceptionResponse.setDescription(e.getMessage());
         return ResponseEntity
@@ -22,11 +22,20 @@ public class ErrorHandlingController {
     }
 
     @ExceptionHandler(CalculationNotImplementedException.class)
-    public ResponseEntity<ExceptionResponse> notFoundException(CalculationNotImplementedException e) {
+    public ResponseEntity<ExceptionResponse> calculationNotImplementedException(CalculationNotImplementedException e) {
         var exceptionResponse = new ExceptionResponse();
         exceptionResponse.setDescription(e.getDescription());
         return ResponseEntity
                 .status(HttpStatus.NOT_IMPLEMENTED)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(FileNotExistException.class)
+    public ResponseEntity<ExceptionResponse> notFoundException(FileNotExistException e) {
+        var exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setDescription(e.getDescription());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .body(exceptionResponse);
     }
 }
