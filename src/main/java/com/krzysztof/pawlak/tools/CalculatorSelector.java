@@ -8,25 +8,35 @@ import com.krzysztof.pawlak.calculators.real.RealNumbersCalculator;
 import com.krzysztof.pawlak.calculators.real.SqrtCalculator;
 import com.krzysztof.pawlak.calculators.vector.VectorByNumberCalculator;
 import com.krzysztof.pawlak.calculators.vector.VectorByVectorCalculator;
+import com.krzysztof.pawlak.history.HistoryService;
 import com.krzysztof.pawlak.models.InputType;
 import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import com.krzysztof.pawlak.validation.InputSizeValidator;
 import org.springframework.stereotype.Service;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.Deque;
-import java.util.List;
 import java.util.Map;
 
 import static com.krzysztof.pawlak.tools.CalculatorSelector.CalculatorEnum.*;
-import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM;
 
 
 @Service
 public class CalculatorSelector {
+
+    private final HistoryService historyService = new HistoryService();
+    private final InputSizeValidator inputSizeValidator = new InputSizeValidator();
+
+    private static final Map<CalculatorEnum, Calculator> calculators = Map.ofEntries(
+            Map.entry(MATRIX_MATRIX, new MatrixByMatrixCalculator()),
+            Map.entry(MATRIX_VECTOR, new MatrixByVectorCalculator()),
+            Map.entry(MATRIX_NUMBER, new MatrixByNumberCalculator()),
+            Map.entry(VECTOR_VECTOR, new VectorByVectorCalculator()),
+            Map.entry(VECTOR_NUMBER, new VectorByNumberCalculator()),
+            Map.entry(REAL_NUMBERS, new RealNumbersCalculator()),
+            Map.entry(SQRT, new SqrtCalculator())
+    );
 
     public enum CalculatorEnum {
 
@@ -48,16 +58,6 @@ public class CalculatorSelector {
             return this.value;
         }
     }
-
-    private static final Map<CalculatorEnum, Calculator> calculators = Map.ofEntries(
-            Map.entry(MATRIX_MATRIX, new MatrixByMatrixCalculator()),
-            Map.entry(MATRIX_VECTOR, new MatrixByVectorCalculator()),
-            Map.entry(MATRIX_NUMBER, new MatrixByNumberCalculator()),
-            Map.entry(VECTOR_VECTOR, new VectorByVectorCalculator()),
-            Map.entry(VECTOR_NUMBER, new VectorByNumberCalculator()),
-            Map.entry(REAL_NUMBERS, new RealNumbersCalculator()),
-            Map.entry(SQRT, new SqrtCalculator())
-    );
 
     private Calculator select(Deque<ValueContainer> deque) throws OperationNotSupportedException {
 
@@ -122,27 +122,21 @@ public class CalculatorSelector {
         return value.getInputType() == InputType.NUMBER;
     }
 
+    // TODO: remove
     public Object calculate(Deque<ValueContainer> deque, int selected) throws OperationNotSupportedException {
         final var calculator = select(deque);
         return calculator.calculate(deque, selected);
     }
 
     public Object calculate(Deque<ValueContainer> deque, OperationChar selected) throws OperationNotSupportedException {
+        deque.forEach(inputSizeValidator::isValidThrowExceptionIfNot);
         final var calculator = select(deque);
-        return calculator.calculate(deque, selected);
+        final var result = calculator.calculate(deque, selected);
+        historyService.writeEntry(deque, new ValueContainer(result), selected.getRepresentation());
+        return result;
     }
 
-    public List<String> suggest(Deque<ValueContainer> deque) throws OperationNotSupportedException {
-        final var calculator = select(deque);
-        return calculator.suggest();
-    }
-
-    public String getOperationByPosition(Deque<ValueContainer> deque, int position) throws OperationNotSupportedException {
-        final var calculator = select(deque);
-        return calculator.getOperationNameAsString(position);
-    }
-
-    private byte[] makeFileInfo() {
+    public byte[] makeFileInfo() {
         StringBuilder stringBuffer = new StringBuilder();
         for (Map.Entry<CalculatorEnum, Calculator> entry : calculators.entrySet()) {
             stringBuffer.append(entry.getKey().getAcceptedInput());
@@ -152,14 +146,5 @@ public class CalculatorSelector {
             }
         }
         return stringBuffer.toString().getBytes();
-    }
-
-    public HttpEntity<byte[]> getInfo() {
-        var output = makeFileInfo();
-        return ResponseEntity.ok()
-                .contentLength(output.length)
-                .contentType(new MediaType(APPLICATION_OCTET_STREAM))
-                .header("Content-Disposition", "attachment; filename=info.txt")
-                .body(output);
     }
 }

@@ -1,6 +1,7 @@
 package com.krzysztof.pawlak.calculators.matrix;
 
 import com.krzysztof.pawlak.calculators.Calculator;
+import com.krzysztof.pawlak.error.CalculationConstrainException;
 import com.krzysztof.pawlak.error.CalculationNotImplementedException;
 import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
@@ -79,7 +80,7 @@ public class MatrixByMatrixCalculator implements Calculator {
 
     public BigDecimal[][] add(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
         if (matrix.length != matrix2.length || matrix[0].length != matrix2[0].length) {
-            throw new IllegalArgumentException(
+            throw new CalculationConstrainException(
                     "Sorry, it's not possible to add matrices with different rows and columns length.");
         }
         return IntStream.range(0, matrix.length)
@@ -91,7 +92,7 @@ public class MatrixByMatrixCalculator implements Calculator {
 
     public BigDecimal[][] subtract(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
         if (matrix.length != matrix2.length || matrix[0].length != matrix2[0].length) {
-            throw new IllegalArgumentException(
+            throw new CalculationConstrainException(
                     "Sorry, it's not possible to subtract matrices with different rows and columns length.");
         }
         return IntStream.range(0, matrix.length)
@@ -103,7 +104,7 @@ public class MatrixByMatrixCalculator implements Calculator {
 
     public BigDecimal[][] multiply(BigDecimal[][] matrix, BigDecimal[][] matrix2) {
         if (matrix.length != matrix2[0].length || matrix[0].length != matrix2.length) {
-            throw new IllegalArgumentException(
+            throw new CalculationConstrainException(
                     "Sorry, it's not possible to multiply matrices with this rows and columns length.");
         }
         return Arrays.stream(matrix).map(row ->

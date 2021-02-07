@@ -1,17 +1,17 @@
 package com.krzysztof.pawlak.tools;
 
+import com.krzysztof.pawlak.error.MatrixVectorNumberParseException;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.krzysztof.pawlak.config.AppConfig.ALLOWED_CHARS;
+
 public class InputParse {
 
-    // DIGIT OR MATRIX / VECTOR
-    // \\u0020 - space
-    // ;(?!]) - semicolon can occur if next char is not "]" (regex lookahead)
-    static final String ALLOWED_CHARS = "-?[0-9]+\\.?[0-9]*|\\[(\\u0020?-?[0-9]+\\.?[0-9]*\\u0020?(;(?!]))?){2,}]";
     static final String ONLY_ONE_NUMBER = "^\\u0020*-?[0-9]+\\.?[0-9]*\\u0020*$";
 
     public boolean isValid(String input) {
@@ -20,13 +20,6 @@ public class InputParse {
 
     public boolean isOnlyOneNumber(String input) {
         return input.matches(ONLY_ONE_NUMBER);
-    }
-
-    public void isValidSyntaxThrowException(String input) {
-        if (!isValid(input)) {
-            throw new IllegalArgumentException(
-                    "Sorry it's not a number, vector or matrix. Please try again or enter \"s\" to show help.");
-        }
     }
 
     public Object parse(String input) {
@@ -52,7 +45,7 @@ public class InputParse {
             }
             return BigDecimal.valueOf(Double.parseDouble(input));
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Incorrect input. Please try again or enter \"s\" to show syntax guide.");
+            throw new MatrixVectorNumberParseException("Data is unprocessable.");
         }
     }
 

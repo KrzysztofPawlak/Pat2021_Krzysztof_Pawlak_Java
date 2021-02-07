@@ -1,6 +1,7 @@
 package com.krzysztof.pawlak.calculators.real;
 
 import com.krzysztof.pawlak.calculators.Calculator;
+import com.krzysztof.pawlak.error.CalculationConstrainException;
 import com.krzysztof.pawlak.error.CalculationNotImplementedException;
 import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
@@ -60,7 +61,7 @@ public class SqrtCalculator implements Calculator {
 
     public BigDecimal sqrt(BigDecimal number) {
         if (number.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Sorry, it's not possible get square from negative number.");
+            throw new CalculationConstrainException("Sorry, it's not possible get square from negative number.");
         }
         return number.sqrt(new MathContext(10));
     }

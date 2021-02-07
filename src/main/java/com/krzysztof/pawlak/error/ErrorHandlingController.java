@@ -38,4 +38,22 @@ public class ErrorHandlingController {
                 .status(HttpStatus.NOT_FOUND)
                 .body(exceptionResponse);
     }
+
+    @ExceptionHandler(CalculationConstrainException.class)
+    public ResponseEntity<ExceptionResponse> inputSizeExceedException(CalculationConstrainException e) {
+        var exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setDescription(e.getDescription());
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(MatrixVectorNumberParseException.class)
+    public ResponseEntity<ExceptionResponse> parseException(MatrixVectorNumberParseException e) {
+        var exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setDescription(e.getDescription());
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(exceptionResponse);
+    }
 }

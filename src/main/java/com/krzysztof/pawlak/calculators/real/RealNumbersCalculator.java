@@ -2,6 +2,7 @@ package com.krzysztof.pawlak.calculators.real;
 
 import com.krzysztof.pawlak.calculators.Calculator;
 import com.krzysztof.pawlak.config.AppConfig;
+import com.krzysztof.pawlak.error.CalculationConstrainException;
 import com.krzysztof.pawlak.error.CalculationNotImplementedException;
 import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
@@ -102,14 +103,14 @@ public class RealNumbersCalculator implements Calculator {
 
     public BigDecimal divide(BigDecimal number, BigDecimal number2) {
         if (number2.compareTo(BigDecimal.ZERO) == 0) {
-            throw new IllegalArgumentException("Cannot divide by zero!!!");
+            throw new CalculationConstrainException("Cannot divide by zero!!!");
         }
         return number.divide(number2, MathContext.DECIMAL128).stripTrailingZeros();
     }
 
     public BigDecimal exp(BigDecimal number, int exponent) {
         if (exponent > AppConfig.MAX_EXPONENT_VALUE) {
-            throw new IllegalArgumentException("Sorry, max supported exponent is: " + AppConfig.MAX_EXPONENT_VALUE);
+            throw new CalculationConstrainException("Sorry, max supported exponent is: " + AppConfig.MAX_EXPONENT_VALUE);
         }
         return number.pow(exponent).stripTrailingZeros();
     }

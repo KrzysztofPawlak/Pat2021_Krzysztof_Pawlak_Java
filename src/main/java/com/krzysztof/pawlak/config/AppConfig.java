@@ -7,5 +7,9 @@ public final class AppConfig {
     public static final int MAX_MATRIX_COLUMNS = 4;
     public static final int MAX_VECTOR_LENGTH = 4;
     public static final int LOG_ROTATION_LINE_LENGTH = 50;
-    public static final boolean IS_LOGGER_ON = false;
+
+    // DIGIT OR MATRIX / VECTOR
+    // \\u0020 - space
+    // ;(?!]) - semicolon can occur if next char is not "]" (regex lookahead)
+    public static final String ALLOWED_CHARS = "-?[0-9]+\\.?[0-9]*|\\[(\\u0020?-?[0-9]+\\.?[0-9]*\\u0020?(;(?!]))?){2,}]";
 }

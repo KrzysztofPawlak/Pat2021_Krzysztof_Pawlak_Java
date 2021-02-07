@@ -1,12 +1,12 @@
 package com.krzysztof.pawlak.error;
 
-public class FileNotExistException extends RuntimeException {
+public class MatrixVectorNumberParseException extends RuntimeException {
 
     private final String description;
 
-    public FileNotExistException() {
+    public MatrixVectorNumberParseException(String message) {
         super();
-        this.description = "File not exists.";
+        this.description = message;
     }
 
     public String getDescription() {

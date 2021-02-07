@@ -4,11 +4,6 @@ public class CalculationNotImplementedException extends RuntimeException {
 
     private final String description;
 
-    public CalculationNotImplementedException(String message) {
-        super();
-        this.description = message;
-    }
-
     public CalculationNotImplementedException() {
         super();
         this.description = "Calculation for this types of data is impossible or not implemented.";
