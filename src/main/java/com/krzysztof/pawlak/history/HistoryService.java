@@ -2,6 +2,7 @@ package com.krzysztof.pawlak.history;
 
 import com.krzysztof.pawlak.calculator.OutputConverter;
 import com.krzysztof.pawlak.models.ValueContainer;
+import com.krzysztof.pawlak.tools.FileLoaderService;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
@@ -25,6 +26,7 @@ public class HistoryService {
     private static final String FILENAME = "historia_obliczen.txt";
     private int linesAmount;
     private OutputConverter outputConverter = new OutputConverter();
+    private FileLoaderService fileLoaderService = new FileLoaderService();
 
     public HistoryService() {
         try {
@@ -111,6 +113,11 @@ public class HistoryService {
         } catch (IOException e) {
             return 0;
         }
+    }
+
+    public byte[] readRecentHistoryFile() {
+        var path = Paths.get(System.getProperty("user.dir"), FILENAME);
+        return fileLoaderService.getFileAsByteArr(path);
     }
 
     private static boolean isNumeric(String input) {
