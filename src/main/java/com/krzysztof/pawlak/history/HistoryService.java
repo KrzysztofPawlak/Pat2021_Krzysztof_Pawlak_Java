@@ -120,6 +120,11 @@ public class HistoryService {
         return fileLoaderService.getFileAsByteArr(path);
     }
 
+    public byte[] readSpecificHistoryFile(String filename) {
+        var path = Paths.get(System.getProperty("user.dir"), filename);
+        return fileLoaderService.getFileAsByteArr(path);
+    }
+
     private static boolean isNumeric(String input) {
         if (input == null) {
             return false;

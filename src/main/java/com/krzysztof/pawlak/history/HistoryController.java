@@ -3,10 +3,7 @@ package com.krzysztof.pawlak.history;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -38,8 +35,12 @@ public class HistoryController {
     }
 
     @GetMapping("/{filename}")
-    public List<String> getByFile() {
-        return null;
+    public HttpEntity<byte[]> getByFile(@PathVariable String filename) {
+        var output = historyService.readSpecificHistoryFile(filename);
+        return ResponseEntity.ok()
+                .contentLength(output.length)
+                .contentType(new MediaType(TEXT_PLAIN, StandardCharsets.UTF_8))
+                .body(output);
     }
 
     @DeleteMapping
