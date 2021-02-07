@@ -4,7 +4,7 @@ import com.krzysztof.pawlak.config.AppConfig;
 import com.krzysztof.pawlak.models.*;
 import com.krzysztof.pawlak.tools.CalculatorSelector;
 import com.krzysztof.pawlak.tools.HUD;
-import com.krzysztof.pawlak.tools.HistoryWriter;
+import com.krzysztof.pawlak.history.HistoryService;
 import com.krzysztof.pawlak.tools.InputParse;
 
 import javax.naming.OperationNotSupportedException;
@@ -31,14 +31,14 @@ public class Application {
     private static final int MAX_MEMORY_SLOT = 2;
     private static final int ELEMENTS_IN_MEMORY_FOR_EXTENDED_MODE = 1;
     private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
-    private final HistoryWriter historyWriter;
+    private final HistoryService historyWriter;
 
     public Application() {
         this.inputParse = new InputParse();
         this.deque = new ArrayDeque<>(MAX_MEMORY_SLOT);
         this.hud = new HUD();
         this.calculatorSelector = new CalculatorSelector();
-        this.historyWriter = new HistoryWriter();
+        this.historyWriter = new HistoryService();
         loggerOnOff();
     }
 

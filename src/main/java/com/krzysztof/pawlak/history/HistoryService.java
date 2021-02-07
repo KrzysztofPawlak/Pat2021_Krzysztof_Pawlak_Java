@@ -1,7 +1,8 @@
-package com.krzysztof.pawlak.tools;
+package com.krzysztof.pawlak.history;
 
 import com.krzysztof.pawlak.calculator.OutputConverter;
 import com.krzysztof.pawlak.models.ValueContainer;
+import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,19 +10,23 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Deque;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.krzysztof.pawlak.config.AppConfig.LOG_ROTATION_LINE_LENGTH;
 
-public class HistoryWriter {
+@Service
+public class HistoryService {
 
     private FileWriter fileWriter;
     private static final String FILENAME = "historia_obliczen.txt";
     private int linesAmount;
     private OutputConverter outputConverter = new OutputConverter();
 
-    public HistoryWriter() {
+    public HistoryService() {
         try {
             linesAmount = countLine();
             fileWriter = new FileWriter(FILENAME, true);
@@ -83,13 +88,23 @@ public class HistoryWriter {
         }
     }
 
+    public List<String> getListOfFiles() {
+        try (Stream<String> stream = Files.list(Path.of(System.getProperty("user.dir")))
+                .map(path -> path.getFileName().toString())) {
+            return stream
+                    .filter(filename -> filename.contains(FILENAME)).collect(Collectors.toList());
+        } catch (IOException e) {
+            return Collections.emptyList();
+        }
+    }
+
     private int getLastLogNumber() {
         try (Stream<String> stream = Files.list(Path.of(System.getProperty("user.dir")))
                 .map(path -> path.getFileName().toString())) {
             return stream
                     .filter(filename -> filename.contains(FILENAME))
                     .map(filename -> filename.replace(FILENAME + ".", ""))
-                    .filter(HistoryWriter::isNumeric)
+                    .filter(HistoryService::isNumeric)
                     .mapToInt(Integer::valueOf)
                     .max()
                     .orElse(0);
