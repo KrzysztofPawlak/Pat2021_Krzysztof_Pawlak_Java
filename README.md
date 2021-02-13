@@ -76,6 +76,10 @@ One space between brackets [], number and column separator ";" is also accepted.
 
 # Calculation
 
+## LIST OF OPERATIONS - GET
+
+example: `localhost:8080/info`
+
 ## ADD - POST
 
 example: `localhost:8080/add`
@@ -210,7 +214,6 @@ example: `localhost:8080/multiply`
 example: `localhost:8080/divide`
 
 - numbers
-
 ```
 {
     "values" : [
@@ -224,6 +227,7 @@ example: `localhost:8080/divide`
 
 example: `localhost:8080/exponential`
 
+- numbers
 ```
 {
     "values" : [
@@ -237,6 +241,7 @@ example: `localhost:8080/exponential`
 
 example: `localhost:8080/sqrt`
 
+- numbers
 ```
 {
     "values" : [
@@ -244,3 +249,17 @@ example: `localhost:8080/sqrt`
     ]
 }
 ```
+
+# History
+
+## LIST OF FILES - GET
+
+example: `localhost:8080/history`
+
+## LAST OPERATIONS - GET
+
+example: `localhost:8080/history/recent`
+
+## THE SPECIFIC FILE - GET
+
+example: `localhost:8080/history/historia_obliczen.txt`
