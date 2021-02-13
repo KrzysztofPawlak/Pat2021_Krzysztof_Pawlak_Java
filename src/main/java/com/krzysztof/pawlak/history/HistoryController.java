@@ -1,6 +1,7 @@
 package com.krzysztof.pawlak.history;
 
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,8 @@ public class HistoryController {
     }
 
     @DeleteMapping
-    public void delete() {
-
+    public ResponseEntity delete() {
+        return historyService.removeHistory() ? new ResponseEntity(HttpStatus.OK) :
+                new ResponseEntity(HttpStatus.CONFLICT);
     }
 }

@@ -3,8 +3,11 @@ package com.krzysztof.pawlak.history;
 import com.krzysztof.pawlak.calculator.OutputConverter;
 import com.krzysztof.pawlak.models.ValueContainer;
 import com.krzysztof.pawlak.tools.FileLoaderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -22,70 +25,66 @@ import static com.krzysztof.pawlak.config.AppConfig.LOG_ROTATION_LINE_LENGTH;
 @Service
 public class HistoryService {
 
-    private FileWriter fileWriter;
     private static final String FILENAME = "historia_obliczen.txt";
     private int linesAmount;
-    private OutputConverter outputConverter = new OutputConverter();
-    private FileLoaderService fileLoaderService = new FileLoaderService();
+    private final OutputConverter outputConverter = new OutputConverter();
+    private final FileLoaderService fileLoaderService = new FileLoaderService();
+    Logger logger = LoggerFactory.getLogger(HistoryService.class);
 
     public HistoryService() {
-        try {
-            linesAmount = countLine();
-            fileWriter = new FileWriter(FILENAME, true);
-        } catch (IOException e) {
-            System.out.println("can't open log file");
-        }
+        linesAmount = countLine();
     }
 
     public void writeEntry(Deque<ValueContainer> deque, ValueContainer result, String operator) {
-        try {
-            moveFileIfMaxLimitExceed();
+        moveFileIfMaxLimitExceed();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILENAME, true))) {
             if (deque.size() == 1) {
-                appendOperator(operator);
-                append(deque.peekFirst());
+                appendOperator(writer, operator);
+                append(writer, deque.peekFirst());
             } else {
-                append(deque.peekFirst());
-                appendOperator(operator);
-                append(deque.peekLast());
+                append(writer, deque.peekFirst());
+                appendOperator(writer, operator);
+                append(writer, deque.peekLast());
             }
-            appendOperator("=");
-            append(result);
-            fileWriter.write(System.lineSeparator());
-            fileWriter.flush();
+            appendOperator(writer, "=");
+            append(writer, result);
+            writer.write(System.lineSeparator());
+            writer.flush();
             linesAmount++;
         } catch (IOException e) {
-            System.out.println("can't write to log file");
+            logger.error("writeEntry() - can't write to log file");
         }
     }
 
     private void moveFileIfMaxLimitExceed() {
         if (linesAmount >= LOG_ROTATION_LINE_LENGTH) {
             try {
-                fileWriter.close();
                 final int nextFileNumber = getLastLogNumber() + 1;
                 final String nextFilename = FILENAME + "." + nextFileNumber;
                 Files.move(Paths.get(System.getProperty("user.dir"), FILENAME),
                         Paths.get(System.getProperty("user.dir"), nextFilename));
                 linesAmount = 0;
-                fileWriter = new FileWriter(FILENAME, true);
             } catch (IOException e) {
-                System.out.println("can't move log file");
+                e.printStackTrace();
+                logger.error("moveFileIfMaxLimitExceed() - can't move log file");
             }
         }
     }
 
-    private void append(ValueContainer value) throws IOException {
-        fileWriter.write(outputConverter.convert(value));
+    private void append(BufferedWriter writer, ValueContainer value) throws IOException {
+        writer.write(outputConverter.convert(value));
     }
 
-    private void appendOperator(String operator) throws IOException {
-        fileWriter.write(" " + operator + " ");
+    private void appendOperator(BufferedWriter writer, String operator) throws IOException {
+        writer.write(" " + operator + " ");
     }
 
     private int countLine() {
-        try (Stream<String> stream = Files.lines(Paths.get(System.getProperty("user.dir"), FILENAME), StandardCharsets.UTF_8)) {
+        try (Stream<String> stream = Files.lines(Paths.get(System.getProperty("user.dir"), FILENAME),
+                StandardCharsets.UTF_8)) {
             return Math.toIntExact(stream.count());
         } catch (IOException e) {
+            logger.error("countLine() - Unable to read file: ".concat(FILENAME));
             return 0;
         }
     }
@@ -96,7 +95,31 @@ public class HistoryService {
             return stream
                     .filter(filename -> filename.contains(FILENAME)).collect(Collectors.toList());
         } catch (IOException e) {
+            logger.info("no files in history");
             return Collections.emptyList();
+        }
+    }
+
+    public boolean removeHistory() {
+        try {
+            List<String> listOfFiles = getListOfFiles();
+            for (String filename : listOfFiles) {
+                removeHistoryFile(filename);
+            }
+            linesAmount = 0;
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private void removeHistoryFile(String filename) throws IOException {
+        try {
+            Files.deleteIfExists(Path.of(System.getProperty("user.dir"), filename));
+            logger.info("file deleted: ".concat(filename));
+        } catch (IOException e) {
+            logger.error("removeHistory() - Unable to delete file: ".concat(filename));
+            throw e;
         }
     }
 
