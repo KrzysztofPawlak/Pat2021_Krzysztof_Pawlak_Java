@@ -39,18 +39,6 @@ calculator allows for operations on:
 ## matrix - vector
 - multiplication
 
-# How to use
-All operation except square root require providing 2 data. When 2 data is present in the application, a list of operations will be displayed. 
-
-For the square root, after the first number is entered a following message will be displayed: 
-`Enter some data or switch to extended mode (SQRT) typing: "o".`
-So we can press this option and the list will be displayed.
-
-After each calculation, the result is remembered in memory so you can continue with the next calculation. 
-If you need to clear an item from memory, enter: "c" (all memory), "c1" (memory slot 1) or "c2" (memory slot 2). 
-
-You can close the application by entering "q!" 
-
 # Syntax guide
 ## NUMBER
 Should be without any space. Decimal precision is also accepted.
@@ -86,28 +74,173 @@ column:
 
 One space between brackets [], number and column separator ";" is also accepted.
 
-# All options
-
-q! - exit  
-c - clear all memory  
-c1 - remove value from memory1  
-c2 - remove value from memory2  
-v - show current values in memory  
-h - show help  
-s - syntax guide  
-o - extended mode for sqrt (only available when one number in memory is present)  
-
 # Calculation
 
-## add - POST
+## ADD - POST
 
 example: `localhost:8080/add`
+
+- matrix - matrix
 
 ```
 {
     "values" : [
         "[2 4;4 5]",
         "[2 4;4 5]"
+    ]
+}
+```
+
+- vector - vector
+
+```
+{
+    "values" : [
+        "[123 4]",
+        "[11 2]"
+    ]
+}
+```
+
+- numbers
+```
+{
+    "values" : [
+        "123.21",
+        "11.6"
+    ]
+}
+```
+
+## SUBTRACT - POST
+
+example: `localhost:8080/subtract`
+
+- matrix - matrix
+
+```
+{
+    "values" : [
+        "[2 4;4 5]",
+        "[1 2;3 1]"
+    ]
+}
+```
+
+- vector - vector
+
+```
+{
+    "values" : [
+        "[123 4]",
+        "[11 2]"
+    ]
+}
+```
+
+- numbers
+```
+{
+    "values" : [
+        "123.21",
+        "11.6"
+    ]
+}
+```
+
+## MULTIPLY - POST
+
+example: `localhost:8080/multiply`
+
+- matrix - matrix
+
+```
+{
+    "values" : [
+        "[2 4;4 5]",
+        "[2 4;4 5]"
+    ]
+}
+```
+
+- matrix - vector
+
+```
+{
+    "values" : [
+        "[2 4;4 5]",
+        "[2 4]"
+    ]
+}
+```
+
+- matrix - number
+
+```
+{
+    "values" : [
+        "[2 4;4 5]",
+        "3"
+    ]
+}
+```
+
+- vector - number
+```
+{
+    "values" : [
+        "[2 4]",
+        "11.6"
+    ]
+}
+```
+
+- numbers
+```
+{
+    "values" : [
+        "123.21",
+        "11.6"
+    ]
+}
+```
+
+## DIVIDE - POST
+
+example: `localhost:8080/divide`
+
+- numbers
+
+```
+{
+    "values" : [
+        "200",
+        "4"
+    ]
+}
+```
+
+## EXPONENTIATION - POST
+
+example: `localhost:8080/exponential`
+
+```
+{
+    "values" : [
+        "4",
+        "3"
+    ]
+}
+```
+
+## SQRT - POST
+
+example: `localhost:8080/sqrt`
+
+```
+{
+    "values" : [
+        "16"
     ]
 }
 ```

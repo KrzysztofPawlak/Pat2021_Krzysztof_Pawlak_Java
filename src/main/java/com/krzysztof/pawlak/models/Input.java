@@ -11,13 +11,9 @@ public class Input {
 
     private List<@NotNull @Pattern(
             regexp = ALLOWED_CHARS,
-            message = "should be number or matrix: [1 2;3 4] or vector: [1 2 3]") String> values = new ArrayList<>();
+            message = "should be number: 1/-1 or matrix: [1 2;3 4] or vector: [1 2 3]") String> values = new ArrayList<>();
 
     public List<String> getValues() {
         return values;
-    }
-
-    public void setValues(List<String> values) {
-        this.values = values;
     }
 }

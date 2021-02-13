@@ -48,8 +48,8 @@ public class ErrorHandlingController {
                 .body(exceptionResponse);
     }
 
-    @ExceptionHandler(MatrixVectorNumberParseException.class)
-    public ResponseEntity<ExceptionResponse> parseException(MatrixVectorNumberParseException e) {
+    @ExceptionHandler(InputParseException.class)
+    public ResponseEntity<ExceptionResponse> parseException(InputParseException e) {
         var exceptionResponse = new ExceptionResponse();
         exceptionResponse.setDescription(e.getDescription());
         return ResponseEntity

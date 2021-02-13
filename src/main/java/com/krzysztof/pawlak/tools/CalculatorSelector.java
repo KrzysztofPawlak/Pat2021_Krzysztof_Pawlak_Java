@@ -8,6 +8,7 @@ import com.krzysztof.pawlak.calculators.real.RealNumbersCalculator;
 import com.krzysztof.pawlak.calculators.real.SqrtCalculator;
 import com.krzysztof.pawlak.calculators.vector.VectorByNumberCalculator;
 import com.krzysztof.pawlak.calculators.vector.VectorByVectorCalculator;
+import com.krzysztof.pawlak.error.CalculationNotImplementedException;
 import com.krzysztof.pawlak.history.HistoryService;
 import com.krzysztof.pawlak.models.InputType;
 import com.krzysztof.pawlak.models.OperationChar;
@@ -66,7 +67,7 @@ public class CalculatorSelector {
             if (isNumber(value)) {
                 return calculators.get(SQRT);
             } else {
-                throw new OperationNotSupportedException();
+                throw new CalculationNotImplementedException();
             }
         }
         final var value2 = deque.peekLast();
@@ -88,7 +89,7 @@ public class CalculatorSelector {
         if (isVectorAndNumber(value, value2)) {
             return calculators.get(VECTOR_NUMBER);
         }
-        throw new OperationNotSupportedException();
+        throw new CalculationNotImplementedException();
     }
 
     private boolean isMatrixAndNumber(ValueContainer value, ValueContainer value2) {
@@ -120,12 +121,6 @@ public class CalculatorSelector {
 
     private boolean isNumber(ValueContainer value) {
         return value.getInputType() == InputType.NUMBER;
-    }
-
-    // TODO: remove
-    public Object calculate(Deque<ValueContainer> deque, int selected) throws OperationNotSupportedException {
-        final var calculator = select(deque);
-        return calculator.calculate(deque, selected);
     }
 
     public Object calculate(Deque<ValueContainer> deque, OperationChar selected) throws OperationNotSupportedException {

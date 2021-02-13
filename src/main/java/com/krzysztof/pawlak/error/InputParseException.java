@@ -1,10 +1,10 @@
 package com.krzysztof.pawlak.error;
 
-public class MatrixVectorNumberParseException extends RuntimeException {
+public class InputParseException extends RuntimeException {
 
     private final String description;
 
-    public MatrixVectorNumberParseException(String message) {
+    public InputParseException(String message) {
         super();
         this.description = message;
     }

@@ -7,7 +7,5 @@ import java.util.Deque;
 
 public interface Calculator extends Suggestive {
 
-    Object calculate(Deque<ValueContainer> deque, int operation);
     Object calculate(Deque<ValueContainer> deque, OperationChar operation);
-    String getOperationNameAsString(int position);
 }

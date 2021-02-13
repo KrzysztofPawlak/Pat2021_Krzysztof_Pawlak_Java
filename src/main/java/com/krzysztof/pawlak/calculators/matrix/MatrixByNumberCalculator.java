@@ -16,21 +16,10 @@ public class MatrixByNumberCalculator implements Calculator {
     private enum Operations {
         MULTIPLY(1);
 
-        private static Map map = new HashMap<>();
         private final int value;
 
         Operations(int value) {
             this.value = value;
-        }
-
-        static {
-            for (Operations operation : Operations.values()) {
-                map.put(operation.value, operation);
-            }
-        }
-
-        static Operations valueOf(int operation) {
-            return (Operations) map.get(operation);
         }
 
         static Operations valueOf(OperationChar operation) {
@@ -38,21 +27,6 @@ public class MatrixByNumberCalculator implements Calculator {
                     .filter(enumOperation -> enumOperation.toString().equals(operation.toString()))
                     .findFirst()
                     .orElseThrow(CalculationNotImplementedException::new);
-        }
-    }
-
-    @Override
-    public BigDecimal[][] calculate(Deque<ValueContainer> deque, int operation) {
-        final var selectedOperation = Operations.valueOf(operation);
-        final var value = deque.peekFirst();
-        final var value2 = deque.peekLast();
-        switch (selectedOperation) {
-            case MULTIPLY:
-                return (value.getInputType() == InputType.MATRIX && value2.getInputType() == InputType.NUMBER) ?
-                        multiply((BigDecimal[][]) value.getValue(), (BigDecimal) value2.getValue()) :
-                        multiply((BigDecimal[][]) value2.getValue(), (BigDecimal) value.getValue());
-            default:
-                throw new UnsupportedOperationException();
         }
     }
 
@@ -76,11 +50,6 @@ public class MatrixByNumberCalculator implements Calculator {
                 Arrays.stream(row).map(value -> value.multiply(number))
                         .toArray(BigDecimal[]::new))
                 .toArray(BigDecimal[][]::new);
-    }
-
-    @Override
-    public String getOperationNameAsString(int selected) {
-        return Operations.valueOf(selected).toString();
     }
 
     @Override

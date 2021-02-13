@@ -17,21 +17,10 @@ public class VectorByVectorCalculator implements Calculator {
         ADD(1),
         SUBTRACT(2);
 
-        private static Map map = new HashMap<>();
         private final int value;
 
         Operations(int value) {
             this.value = value;
-        }
-
-        static {
-            for (Operations operation : Operations.values()) {
-                map.put(operation.value, operation);
-            }
-        }
-
-        static Operations valueOf(int operation) {
-            return (Operations) map.get(operation);
         }
 
         static Operations valueOf(OperationChar operation) {
@@ -39,21 +28,6 @@ public class VectorByVectorCalculator implements Calculator {
                     .filter(enumOperation -> enumOperation.toString().equals(operation.toString()))
                     .findFirst()
                     .orElseThrow(CalculationNotImplementedException::new);
-        }
-    }
-
-    @Override
-    public Vector<BigDecimal> calculate(Deque<ValueContainer> deque, int operation) {
-        final var selectedOperation = Operations.valueOf(operation);
-        final var value = (Vector<BigDecimal>) deque.peekFirst().getValue();
-        final var value2 = (Vector<BigDecimal>) deque.peekLast().getValue();
-        switch (selectedOperation) {
-            case ADD:
-                return add(value, value2);
-            case SUBTRACT:
-                return subtract(value, value2);
-            default:
-                throw new UnsupportedOperationException();
         }
     }
 
@@ -88,11 +62,6 @@ public class VectorByVectorCalculator implements Calculator {
         return IntStream.range(0, vector.size())
                 .mapToObj(position -> vector.get(position).subtract(vector2.get(position)))
                 .collect(Collectors.toCollection(Vector::new));
-    }
-
-    @Override
-    public String getOperationNameAsString(int selected) {
-        return Operations.valueOf(selected).toString();
     }
 
     @Override

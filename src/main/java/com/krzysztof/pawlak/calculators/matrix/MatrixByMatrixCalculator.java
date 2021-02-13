@@ -19,21 +19,10 @@ public class MatrixByMatrixCalculator implements Calculator {
         SUBTRACT(2),
         MULTIPLY(3);
 
-        private static Map map = new HashMap<>();
         private final int value;
 
         Operations(int value) {
             this.value = value;
-        }
-
-        static {
-            for (Operations operation : Operations.values()) {
-                map.put(operation.value, operation);
-            }
-        }
-
-        static Operations valueOf(int operation) {
-            return (Operations) map.get(operation);
         }
 
         static Operations valueOf(OperationChar operation) {
@@ -41,23 +30,6 @@ public class MatrixByMatrixCalculator implements Calculator {
                     .filter(enumOperation -> enumOperation.toString().equals(operation.toString()))
                     .findFirst()
                     .orElseThrow(CalculationNotImplementedException::new);
-        }
-    }
-
-    @Override
-    public BigDecimal[][] calculate(Deque<ValueContainer> deque, int position) {
-        final var selectedOperation = Operations.valueOf(position);
-        final var value = (BigDecimal[][]) deque.peekFirst().getValue();
-        final var value2 = (BigDecimal[][]) deque.peekLast().getValue();
-        switch (selectedOperation) {
-            case ADD:
-                return add(value, value2);
-            case SUBTRACT:
-                return subtract(value, value2);
-            case MULTIPLY:
-                return multiply(value, value2);
-            default:
-                throw new UnsupportedOperationException();
         }
     }
 
@@ -114,11 +86,6 @@ public class MatrixByMatrixCalculator implements Calculator {
                                 .reduce(BigDecimal.ZERO, BigDecimal::add))
                         .toArray(BigDecimal[]::new))
                 .toArray(BigDecimal[][]::new);
-    }
-
-    @Override
-    public String getOperationNameAsString(int selected) {
-        return Operations.valueOf(selected).toString();
     }
 
     @Override

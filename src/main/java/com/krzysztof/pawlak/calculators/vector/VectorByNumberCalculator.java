@@ -16,21 +16,10 @@ public class VectorByNumberCalculator implements Calculator {
     private enum Operations {
         MULTIPLY(1);
 
-        private static Map map = new HashMap<>();
         private final int value;
 
         Operations(int value) {
             this.value = value;
-        }
-
-        static {
-            for (Operations operation : Operations.values()) {
-                map.put(operation.value, operation);
-            }
-        }
-
-        static Operations valueOf(int operation) {
-            return (Operations) map.get(operation);
         }
 
         static Operations valueOf(OperationChar operation) {
@@ -38,21 +27,6 @@ public class VectorByNumberCalculator implements Calculator {
                     .filter(enumOperation -> enumOperation.toString().equals(operation.toString()))
                     .findFirst()
                     .orElseThrow(CalculationNotImplementedException::new);
-        }
-    }
-
-    @Override
-    public Vector<BigDecimal> calculate(Deque<ValueContainer> deque, int operation) {
-        final var selectedOperation = Operations.valueOf(operation);
-        final var value = deque.peekFirst();
-        final var value2 = deque.peekLast();
-        switch (selectedOperation) {
-            case MULTIPLY:
-                return (value.getInputType() == InputType.VECTOR && value2.getInputType() == InputType.NUMBER) ?
-                        multiply((Vector<BigDecimal>) value.getValue(), (BigDecimal) value2.getValue()) :
-                        multiply((Vector<BigDecimal>) value2.getValue(), (BigDecimal) value.getValue());
-            default:
-                throw new UnsupportedOperationException();
         }
     }
 
@@ -75,11 +49,6 @@ public class VectorByNumberCalculator implements Calculator {
         return Arrays.stream(vector.toArray(BigDecimal[]::new))
                 .map(vectorValue -> vectorValue.multiply(number))
                 .collect(Collectors.toCollection(Vector::new));
-    }
-
-    @Override
-    public String getOperationNameAsString(int selected) {
-        return Operations.valueOf(selected).toString();
     }
 
     @Override

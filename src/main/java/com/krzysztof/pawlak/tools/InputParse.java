@@ -1,6 +1,6 @@
 package com.krzysztof.pawlak.tools;
 
-import com.krzysztof.pawlak.error.MatrixVectorNumberParseException;
+import com.krzysztof.pawlak.error.InputParseException;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -45,7 +45,7 @@ public class InputParse {
             }
             return BigDecimal.valueOf(Double.parseDouble(input));
         } catch (IllegalArgumentException e) {
-            throw new MatrixVectorNumberParseException("Data is unprocessable.");
+            throw new InputParseException("Data is unprocessable.");
         }
     }
 

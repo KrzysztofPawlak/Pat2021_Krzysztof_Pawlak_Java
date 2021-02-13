@@ -16,7 +16,7 @@ public class OutputConverter implements Converter<ValueContainer, String> {
     @Override
     public String convert(ValueContainer value) {
         if (value.getInputType() == InputType.NUMBER) {
-            return value.getValue().toString();
+            return ((BigDecimal) value.getValue()).toPlainString();
         }
         if (value.getInputType() == InputType.MATRIX) {
             var matrix = Arrays.stream(((BigDecimal[][]) value.getValue()))
