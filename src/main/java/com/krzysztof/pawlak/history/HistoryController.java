@@ -1,6 +1,6 @@
 package com.krzysztof.pawlak.history;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.TEXT_PLAIN;
 
-@Api(tags = "history")
+@Tag(name = "History", description = "the History API")
 @RestController
 @RequestMapping("/history")
 public class HistoryController {
