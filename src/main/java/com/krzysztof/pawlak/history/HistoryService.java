@@ -84,7 +84,7 @@ public class HistoryService {
                 StandardCharsets.UTF_8)) {
             return Math.toIntExact(stream.count());
         } catch (IOException e) {
-            logger.error("countLine() - Unable to read file: ".concat(FILENAME));
+            logger.info("countLine() - Unable to read file: ".concat(FILENAME));
             return 0;
         }
     }
