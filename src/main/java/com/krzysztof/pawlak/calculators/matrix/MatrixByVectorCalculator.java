@@ -42,7 +42,7 @@ public class MatrixByVectorCalculator implements Calculator {
                         multiply((BigDecimal[][]) value.getValue(), (Vector<BigDecimal>) value2.getValue()) :
                         multiply((BigDecimal[][]) value2.getValue(), (Vector<BigDecimal>) value.getValue());
             default:
-                throw new UnsupportedOperationException();
+                throw new CalculationNotImplementedException();
         }
     }
 

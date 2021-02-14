@@ -53,7 +53,7 @@ public class RealNumbersCalculator implements Calculator {
             case EXP:
                 return exp(value, value2.intValue());
             default:
-                throw new UnsupportedOperationException();
+                throw new CalculationNotImplementedException();
         }
     }
 

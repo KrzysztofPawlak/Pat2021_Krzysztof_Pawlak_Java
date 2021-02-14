@@ -41,7 +41,7 @@ public class VectorByNumberCalculator implements Calculator {
                         multiply((Vector<BigDecimal>) value.getValue(), (BigDecimal) value2.getValue()) :
                         multiply((Vector<BigDecimal>) value2.getValue(), (BigDecimal) value.getValue());
             default:
-                throw new UnsupportedOperationException();
+                throw new CalculationNotImplementedException();
         }
     }
 

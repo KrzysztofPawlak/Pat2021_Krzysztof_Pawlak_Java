@@ -46,7 +46,7 @@ public class MatrixByMatrixCalculator implements Calculator {
             case MULTIPLY:
                 return multiply(value, value2);
             default:
-                throw new UnsupportedOperationException();
+                throw new CalculationNotImplementedException();
         }
     }
 

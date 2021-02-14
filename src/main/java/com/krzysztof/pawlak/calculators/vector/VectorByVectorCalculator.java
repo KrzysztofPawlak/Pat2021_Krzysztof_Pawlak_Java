@@ -42,7 +42,7 @@ public class VectorByVectorCalculator implements Calculator {
             case SUBTRACT:
                 return subtract(value, value2);
             default:
-                throw new UnsupportedOperationException();
+                throw new CalculationNotImplementedException();
         }
     }
 

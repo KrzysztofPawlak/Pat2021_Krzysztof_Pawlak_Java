@@ -41,7 +41,7 @@ public class MatrixByNumberCalculator implements Calculator {
                         multiply((BigDecimal[][]) value.getValue(), (BigDecimal) value2.getValue()) :
                         multiply((BigDecimal[][]) value2.getValue(), (BigDecimal) value.getValue());
             default:
-                throw new UnsupportedOperationException();
+                throw new CalculationNotImplementedException();
         }
     }
 

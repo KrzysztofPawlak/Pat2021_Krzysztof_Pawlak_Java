@@ -39,7 +39,7 @@ public class SqrtCalculator implements Calculator {
             case SQRT:
                 return sqrt(value);
             default:
-                throw new UnsupportedOperationException();
+                throw new CalculationNotImplementedException();
         }
     }
 

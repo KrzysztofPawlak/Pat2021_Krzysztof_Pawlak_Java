@@ -270,6 +270,6 @@ example: `localhost:8080/history`
 
 # Documentation
 
-json: `http://localhost:8080/v2/api-docs`
+json: `http://localhost:8080/v3/api-docs`
 
-ui: `http://localhost:8080/swagger-ui/`
+ui: `http://localhost:8080/swagger-ui.html`
