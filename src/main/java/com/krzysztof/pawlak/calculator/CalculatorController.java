@@ -4,6 +4,7 @@ import com.krzysztof.pawlak.models.Input;
 import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
 import com.krzysztof.pawlak.tools.CalculatorSelector;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -231,8 +232,7 @@ public class CalculatorController {
                                     @ExampleObject(name = "Vector Response", value = "[1 2]"),
                                     @ExampleObject(name = "Number Response", value = "1")})),
             @ApiResponse(responseCode = "501", description = "Not implemented", content = @Content),
-            @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content)
-    })
+            @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content)})
     @PostMapping("/sqrt")
     @ResponseStatus(value = HttpStatus.CREATED)
     public String sqrt(@RequestBody @Valid Input input) throws OperationNotSupportedException {
@@ -240,6 +240,7 @@ public class CalculatorController {
         return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.SQRT)));
     }
 
+    @Operation(summary = "Get list of available operation for specific type")
     @ApiResponse(
             responseCode = "200",
             description = "OK",
