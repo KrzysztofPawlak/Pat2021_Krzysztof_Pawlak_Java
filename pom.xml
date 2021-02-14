@@ -75,7 +75,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.krzysztof.pawlak.Main</mainClass>
+                            <mainClass>com.krzysztof.pawlak.MainApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
