@@ -28,6 +28,8 @@ public class CalculatorSelector {
 
     private final HistoryService historyService = new HistoryService();
     private final InputSizeValidator inputSizeValidator = new InputSizeValidator();
+    private static final int INPUT_SIZE_FOR_SQRT = 1;
+    private static final int MAX_SUPPORTED_INPUT_SIZE = 2;
 
     private static final Map<CalculatorEnum, Calculator> calculators = Map.ofEntries(
             Map.entry(MATRIX_MATRIX, new MatrixByMatrixCalculator()),
@@ -60,15 +62,17 @@ public class CalculatorSelector {
         }
     }
 
-    private Calculator select(Deque<ValueContainer> deque) throws OperationNotSupportedException {
-
+    private Calculator select(Deque<ValueContainer> deque) {
         final var value = deque.peekFirst();
-        if (deque.size() == 1) {
+        if (deque.size() == INPUT_SIZE_FOR_SQRT) {
             if (isNumber(value)) {
                 return calculators.get(SQRT);
             } else {
                 throw new CalculationNotImplementedException();
             }
+        }
+        if (deque.size() > MAX_SUPPORTED_INPUT_SIZE) {
+            throw new CalculationNotImplementedException();
         }
         final var value2 = deque.peekLast();
         if (isNumberAndNumber(value, value2)) {
