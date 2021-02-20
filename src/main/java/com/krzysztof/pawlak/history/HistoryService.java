@@ -63,18 +63,21 @@ public class HistoryService implements HistoryOperation {
     }
 
     @Override
-    public byte[] readRecentHistoryFile() {
+    public byte[] readRecent() {
         var path = Paths.get(System.getProperty("user.dir"), FILENAME);
         return fileLoaderService.getFileAsByteArr(path);
     }
 
     @Override
+    public byte[] readByRange(int from, int to) {
+        return new byte[0];
+    }
+
     public byte[] readSpecificHistoryFile(String filename) {
         var path = Paths.get(System.getProperty("user.dir"), filename);
         return fileLoaderService.getFileAsByteArr(path);
     }
 
-    @Override
     public List<String> getListOfFiles() {
         try (Stream<String> stream = Files.list(Path.of(System.getProperty("user.dir")))
                 .map(path -> path.getFileName().toString())) {

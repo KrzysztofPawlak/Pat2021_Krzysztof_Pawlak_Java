@@ -4,7 +4,6 @@ import com.krzysztof.pawlak.models.ValueContainer;
 import com.krzysztof.pawlak.models.db.DbHistory;
 
 import java.util.Deque;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class H2HistoryService implements HistoryOperation {
@@ -30,7 +29,7 @@ public class H2HistoryService implements HistoryOperation {
     }
 
     @Override
-    public byte[] readRecentHistoryFile() {
+    public byte[] readRecent() {
         return historyRepository.findAll().stream()
                 .map(DbHistory::getOperation)
                 .collect(Collectors.joining(System.lineSeparator()))
@@ -38,12 +37,22 @@ public class H2HistoryService implements HistoryOperation {
     }
 
     @Override
-    public byte[] readSpecificHistoryFile(String filename) {
-        return null;
+    public byte[] readByRange(int from, int to) {
+        final var limit = calculateLimit(from, to);
+        final var offset = calculateOffset(from);
+        return historyRepository.findByLimitAndOffset(limit, offset).stream()
+                .map(DbHistory::getOperation)
+                .collect(Collectors.joining(System.lineSeparator()))
+                .getBytes();
     }
-
-    @Override
-    public List<String> getListOfFiles() {
-        return null;
+    
+    private int calculateLimit(int from, int to) {
+        final var shiftLimitStartedFromFirstElement = 1;
+        return Math.max((to - from) + shiftLimitStartedFromFirstElement, 0);
+    }
+    
+    private int calculateOffset(int from) {
+        final var shiftToReturnFromAsEqual = 1;
+        return Math.max(from - shiftToReturnFromAsEqual, 0);
     }
 }

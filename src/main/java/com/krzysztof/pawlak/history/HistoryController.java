@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import static org.springframework.http.MediaType.TEXT_PLAIN;
 
@@ -28,22 +27,17 @@ public class HistoryController {
         this.historyService = historyService;
     }
 
-    @Operation(summary = "Get list of files log")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = {
-                                    @ExampleObject(name = "List of files log",
-                                            value = "[\"historia_obliczen.txt\"]")}))})
     @GetMapping
-    public List<String> list() {
-        return historyService.getListOfFiles();
+    public HttpEntity<byte[]> read(@RequestParam int from,
+                                   @RequestParam(required = false, defaultValue = "0") int to) {
+        final var output = historyService.readByRange(from, to);
+        return ResponseEntity.ok()
+                .contentLength(output.length)
+                .contentType(new MediaType(TEXT_PLAIN, StandardCharsets.UTF_8))
+                .body(output);
     }
 
-    @Operation(summary = "Get logs from recent file log")
+    @Operation(summary = "Get recent logs")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -56,41 +50,14 @@ public class HistoryController {
                                             "[2.0 4.0;4.0 5.0] + [2.0 4.0;4.0 5.0] = [4.0 8.0;8.0 10.0]")}))})
     @GetMapping("/recent")
     public HttpEntity<byte[]> recent() {
-        var output = historyService.readRecentHistoryFile();
+        var output = historyService.readRecent();
         return ResponseEntity.ok()
                 .contentLength(output.length)
                 .contentType(new MediaType(TEXT_PLAIN, StandardCharsets.UTF_8))
                 .body(output);
     }
 
-    @Operation(summary = "Get history log by filename")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(
-                            mediaType = "text/plain",
-                            examples = {
-                                    @ExampleObject(name = "List of operations by specific file log",
-                                            value = "4.0 ^ 3.0 = 64\n" +
-                                            "[2.0 4.0;4.0 5.0] + [2.0 4.0;4.0 5.0] = [4.0 8.0;8.0 10.0]")})),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not Found",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = {
-                                    @ExampleObject(value = "{\"description\": \"File not exists.\"}")}))})
-    @GetMapping("/{filename}")
-    public HttpEntity<byte[]> getByFile(@PathVariable String filename) {
-        var output = historyService.readSpecificHistoryFile(filename);
-        return ResponseEntity.ok()
-                .contentLength(output.length)
-                .contentType(new MediaType(TEXT_PLAIN, StandardCharsets.UTF_8))
-                .body(output);
-    }
-
-    @Operation(summary = "Delete all files log")
+    @Operation(summary = "Delete all logs")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content),
             @ApiResponse(responseCode = "409", description = "Conflict", content = @Content)})
