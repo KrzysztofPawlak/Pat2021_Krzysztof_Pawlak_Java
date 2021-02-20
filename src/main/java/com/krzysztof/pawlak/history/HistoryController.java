@@ -80,8 +80,7 @@ public class HistoryController {
                     content = @Content(
                             mediaType = "application/json",
                             examples = {
-                                    @ExampleObject(value = "{\"description\": \"File not exists.\"}")}))
-    })
+                                    @ExampleObject(value = "{\"description\": \"File not exists.\"}")}))})
     @GetMapping("/{filename}")
     public HttpEntity<byte[]> getByFile(@PathVariable String filename) {
         var output = historyService.readSpecificHistoryFile(filename);

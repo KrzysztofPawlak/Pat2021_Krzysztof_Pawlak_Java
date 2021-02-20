@@ -9,7 +9,7 @@ import static com.krzysztof.pawlak.config.AppConfig.ALLOWED_CHARS;
 
 public class Input {
 
-    private List<@NotNull @Pattern(
+    private final List<@NotNull @Pattern(
             regexp = ALLOWED_CHARS,
             message = "should be number: 1/-1 or matrix: [1 2;3 4] or vector: [1 2 3]") String> values = new ArrayList<>();
 
