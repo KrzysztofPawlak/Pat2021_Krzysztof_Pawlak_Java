@@ -17,4 +17,11 @@ public class DbHistory {
     public DbHistory(String operation) {
         this.operation = operation;
     }
+
+    public DbHistory() {
+    }
+
+    public String getOperation() {
+        return operation;
+    }
 }

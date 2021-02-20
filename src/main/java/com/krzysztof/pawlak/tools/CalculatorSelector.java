@@ -9,7 +9,7 @@ import com.krzysztof.pawlak.calculators.real.SqrtCalculator;
 import com.krzysztof.pawlak.calculators.vector.VectorByNumberCalculator;
 import com.krzysztof.pawlak.calculators.vector.VectorByVectorCalculator;
 import com.krzysztof.pawlak.error.CalculationNotImplementedException;
-import com.krzysztof.pawlak.history.HistoryService;
+import com.krzysztof.pawlak.history.HistoryOperation;
 import com.krzysztof.pawlak.models.InputType;
 import com.krzysztof.pawlak.models.OperationChar;
 import com.krzysztof.pawlak.models.ValueContainer;
@@ -25,7 +25,7 @@ import static com.krzysztof.pawlak.tools.CalculatorSelector.CalculatorEnum.*;
 @Service
 public class CalculatorSelector {
 
-    private final HistoryService historyService;
+    private final HistoryOperation historyService;
     private final InputSizeValidator inputSizeValidator = new InputSizeValidator();
     private static final int MAX_SUPPORTED_INPUT_SIZE = 2;
     public static final int INPUT_SIZE_FOR_SQRT = 1;
@@ -40,7 +40,7 @@ public class CalculatorSelector {
             Map.entry(SQRT, new SqrtCalculator())
     );
 
-    public CalculatorSelector(HistoryService historyService) {
+    public CalculatorSelector(HistoryOperation historyService) {
         this.historyService = historyService;
     }
 

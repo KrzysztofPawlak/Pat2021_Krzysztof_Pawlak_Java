@@ -22,9 +22,9 @@ import static org.springframework.http.MediaType.TEXT_PLAIN;
 @RequestMapping("/history")
 public class HistoryController {
 
-    private final HistoryService historyService;
+    private final HistoryOperation historyService;
 
-    public HistoryController(HistoryService historyService) {
+    public HistoryController(HistoryOperation historyService) {
         this.historyService = historyService;
     }
 
