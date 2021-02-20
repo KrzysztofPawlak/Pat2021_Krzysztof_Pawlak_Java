@@ -1,6 +1,5 @@
 package com.krzysztof.pawlak.history;
 
-import com.krzysztof.pawlak.calculator.OutputConverter;
 import com.krzysztof.pawlak.models.ValueContainer;
 import com.krzysztof.pawlak.tools.FileLoaderService;
 import org.slf4j.Logger;
@@ -27,27 +26,21 @@ public class HistoryService {
 
     private static final String FILENAME = "historia_obliczen.txt";
     private int linesAmount;
-    private final OutputConverter outputConverter = new OutputConverter();
-    private final FileLoaderService fileLoaderService = new FileLoaderService();
+    private final FileLoaderService fileLoaderService;
     Logger logger = LoggerFactory.getLogger(HistoryService.class);
+    private final HistoryLogMaker historyLogMaker;
 
-    public HistoryService() {
+    public HistoryService(FileLoaderService fileLoaderService, HistoryLogMaker historyLogMaker) {
+        this.fileLoaderService = fileLoaderService;
+        this.historyLogMaker = historyLogMaker;
         linesAmount = countLine();
     }
 
     public void writeEntry(Deque<ValueContainer> deque, ValueContainer result, String operator) {
         moveFileIfMaxLimitExceed();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILENAME, true))) {
-            if (deque.size() == 1) {
-                appendOperator(writer, operator);
-                append(writer, deque.peekFirst());
-            } else {
-                append(writer, deque.peekFirst());
-                appendOperator(writer, operator);
-                append(writer, deque.peekLast());
-            }
-            appendOperator(writer, "=");
-            append(writer, result);
+            final var logToAppend = historyLogMaker.createEntryString(deque, result, operator);
+            writer.write(logToAppend);
             writer.write(System.lineSeparator());
             writer.flush();
             linesAmount++;
@@ -69,14 +62,6 @@ public class HistoryService {
                 logger.error("moveFileIfMaxLimitExceed() - can't move log file");
             }
         }
-    }
-
-    private void append(BufferedWriter writer, ValueContainer value) throws IOException {
-        writer.write(outputConverter.convert(value));
-    }
-
-    private void appendOperator(BufferedWriter writer, String operator) throws IOException {
-        writer.write(" " + operator + " ");
     }
 
     private int countLine() {

@@ -16,7 +16,6 @@ import com.krzysztof.pawlak.models.ValueContainer;
 import com.krzysztof.pawlak.validation.InputSizeValidator;
 import org.springframework.stereotype.Service;
 
-import javax.naming.OperationNotSupportedException;
 import java.util.Deque;
 import java.util.Map;
 
@@ -26,10 +25,10 @@ import static com.krzysztof.pawlak.tools.CalculatorSelector.CalculatorEnum.*;
 @Service
 public class CalculatorSelector {
 
-    private final HistoryService historyService = new HistoryService();
+    private final HistoryService historyService;
     private final InputSizeValidator inputSizeValidator = new InputSizeValidator();
-    private static final int INPUT_SIZE_FOR_SQRT = 1;
     private static final int MAX_SUPPORTED_INPUT_SIZE = 2;
+    public static final int INPUT_SIZE_FOR_SQRT = 1;
 
     private static final Map<CalculatorEnum, Calculator> calculators = Map.ofEntries(
             Map.entry(MATRIX_MATRIX, new MatrixByMatrixCalculator()),
@@ -40,6 +39,10 @@ public class CalculatorSelector {
             Map.entry(REAL_NUMBERS, new RealNumbersCalculator()),
             Map.entry(SQRT, new SqrtCalculator())
     );
+
+    public CalculatorSelector(HistoryService historyService) {
+        this.historyService = historyService;
+    }
 
     public enum CalculatorEnum {
 
@@ -127,7 +130,7 @@ public class CalculatorSelector {
         return value.getInputType() == InputType.NUMBER;
     }
 
-    public Object calculate(Deque<ValueContainer> deque, OperationChar selected) throws OperationNotSupportedException {
+    public Object calculate(Deque<ValueContainer> deque, OperationChar selected) {
         deque.forEach(inputSizeValidator::isValidThrowExceptionIfNot);
         final var calculator = select(deque);
         final var result = calculator.calculate(deque, selected);
