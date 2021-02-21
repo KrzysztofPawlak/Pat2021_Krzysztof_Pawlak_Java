@@ -58,7 +58,7 @@ public class ErrorHandlingController {
     }
 
     @ExceptionHandler(UnprocessableException.class)
-    public ResponseEntity<ExceptionResponse> parseException(UnprocessableException e) {
+    public ResponseEntity<ExceptionResponse> parseLogsException(UnprocessableException e) {
         var exceptionResponse = new ExceptionResponse();
         exceptionResponse.setDescription(e.getDescription());
         return ResponseEntity

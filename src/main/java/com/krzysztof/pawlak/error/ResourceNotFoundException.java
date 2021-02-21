@@ -4,9 +4,9 @@ public class ResourceNotFoundException extends RuntimeException {
 
     private final String description;
 
-    public ResourceNotFoundException(String text) {
+    public ResourceNotFoundException(String message) {
         super();
-        this.description = text;
+        this.description = message;
     }
 
     public String getDescription() {

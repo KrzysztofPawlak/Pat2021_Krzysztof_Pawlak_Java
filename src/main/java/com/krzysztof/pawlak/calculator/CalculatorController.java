@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.OperationNotSupportedException;
 import javax.validation.Valid;
 import java.util.Deque;
 
@@ -71,7 +70,7 @@ public class CalculatorController {
     })
     @PostMapping("/add")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String add(@RequestBody @Valid Input input) throws OperationNotSupportedException {
+    public String add(@RequestBody @Valid Input input) {
         Deque<ValueContainer> values = inputConverter.convert(input);
         return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.ADD)));
     }
@@ -106,7 +105,7 @@ public class CalculatorController {
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content)})
     @PostMapping("/subtract")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String subtract(@RequestBody @Valid Input input) throws OperationNotSupportedException {
+    public String subtract(@RequestBody @Valid Input input) {
         Deque<ValueContainer> values = inputConverter.convert(input);
         return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.SUBTRACT)));
     }
@@ -147,7 +146,7 @@ public class CalculatorController {
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content)})
     @PostMapping("/multiply")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String multiply(@RequestBody @Valid Input input) throws OperationNotSupportedException {
+    public String multiply(@RequestBody @Valid Input input) {
         Deque<ValueContainer> values = inputConverter.convert(input);
         return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.MULTIPLY)));
     }
@@ -177,7 +176,7 @@ public class CalculatorController {
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content)})
     @PostMapping("/exponential")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Object exponential(@RequestBody @Valid Input input) throws OperationNotSupportedException {
+    public Object exponential(@RequestBody @Valid Input input) {
         Deque<ValueContainer> values = inputConverter.convert(input);
         return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.EXP)));
     }
@@ -206,7 +205,7 @@ public class CalculatorController {
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content)})
     @PostMapping("/divide")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String divide(@RequestBody @Valid Input input) throws OperationNotSupportedException {
+    public String divide(@RequestBody @Valid Input input) {
         Deque<ValueContainer> values = inputConverter.convert(input);
         return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.DIVIDE)));
     }
@@ -235,7 +234,7 @@ public class CalculatorController {
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content)})
     @PostMapping("/sqrt")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String sqrt(@RequestBody @Valid Input input) throws OperationNotSupportedException {
+    public String sqrt(@RequestBody @Valid Input input) {
         Deque<ValueContainer> values = inputConverter.convert(input);
         return outputConverter.convert(new ValueContainer(calculatorSelector.calculate(values, OperationChar.SQRT)));
     }
