@@ -19,7 +19,7 @@ public class OutputConverter implements Converter<ValueContainer, String> {
             return ((BigDecimal) value.getValue()).toPlainString();
         }
         if (value.getInputType() == InputType.MATRIX) {
-            var matrix = Arrays.stream(((BigDecimal[][]) value.getValue()))
+            final var matrix = Arrays.stream(((BigDecimal[][]) value.getValue()))
                     .map(row -> Arrays.stream(row)
                             .map(BigDecimal::toString)
                             .collect(Collectors.joining(" "))
@@ -27,7 +27,7 @@ public class OutputConverter implements Converter<ValueContainer, String> {
             return "[" + matrix + "]";
         }
         if (value.getInputType() == InputType.VECTOR) {
-            var vector = ((Vector<BigDecimal>) value.getValue()).stream()
+            final var vector = ((Vector<BigDecimal>) value.getValue()).stream()
                     .map(BigDecimal::toString)
                     .collect(Collectors.joining(" "));
             return "[" + vector + "]";

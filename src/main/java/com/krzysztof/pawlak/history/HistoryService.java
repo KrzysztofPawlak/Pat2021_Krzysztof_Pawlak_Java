@@ -3,16 +3,14 @@ package com.krzysztof.pawlak.history;
 import com.krzysztof.pawlak.models.Range;
 import com.krzysztof.pawlak.models.ValueContainer;
 import com.krzysztof.pawlak.tools.FileLoaderService;
+import com.krzysztof.pawlak.tools.RangeFileLogReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
@@ -23,7 +21,7 @@ import static com.krzysztof.pawlak.config.AppConfig.LOG_ROTATION_LINE_LENGTH;
 
 public class HistoryService implements HistoryOperation {
 
-    private static final String FILENAME = "historia_obliczen.txt";
+    public static final String FILENAME = "historia_obliczen.txt";
     private int linesAmount;
     Logger logger = LoggerFactory.getLogger(HistoryService.class);
     private final FileLoaderService fileLoaderService;
@@ -32,7 +30,7 @@ public class HistoryService implements HistoryOperation {
     public HistoryService(FileLoaderService fileLoaderService, HistoryLogMaker historyLogMaker) {
         this.fileLoaderService = fileLoaderService;
         this.historyLogMaker = historyLogMaker;
-        linesAmount = countLine();
+        linesAmount = FileLoaderService.countLine(FILENAME);
     }
 
     @Override
@@ -65,25 +63,27 @@ public class HistoryService implements HistoryOperation {
 
     @Override
     public byte[] readRecent() {
-        var path = Paths.get(System.getProperty("user.dir"), FILENAME);
-        return fileLoaderService.getFileAsByteArr(path);
+        return fileLoaderService.getFileAsByteArr(FILENAME);
     }
 
     @Override
     public byte[] readByRange(Range range) {
-        return new byte[0];
+        List<String> historicalFiles = getListOfFiles();
+        final var rangeLogReader = new RangeFileLogReader(historicalFiles, range);
+        return rangeLogReader.read();
     }
 
     public byte[] readSpecificHistoryFile(String filename) {
-        var path = Paths.get(System.getProperty("user.dir"), filename);
-        return fileLoaderService.getFileAsByteArr(path);
+        return fileLoaderService.getFileAsByteArr(filename);
     }
 
     public List<String> getListOfFiles() {
-        try (Stream<String> stream = Files.list(Path.of(System.getProperty("user.dir")))
+        try (Stream<String> stream = Files.list(FileLoaderService.getDirPath())
                 .map(path -> path.getFileName().toString())) {
             return stream
-                    .filter(filename -> filename.contains(FILENAME)).collect(Collectors.toList());
+                    .filter(filename -> filename.contains(FILENAME))
+                    .sorted()
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             logger.info("no files in history");
             return Collections.emptyList();
@@ -95,8 +95,7 @@ public class HistoryService implements HistoryOperation {
             try {
                 final int nextFileNumber = getLastLogNumber() + 1;
                 final String nextFilename = FILENAME + "." + nextFileNumber;
-                Files.move(Paths.get(System.getProperty("user.dir"), FILENAME),
-                        Paths.get(System.getProperty("user.dir"), nextFilename));
+                Files.move(FileLoaderService.getPath(FILENAME), FileLoaderService.getPath(nextFilename));
                 linesAmount = 0;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -105,19 +104,9 @@ public class HistoryService implements HistoryOperation {
         }
     }
 
-    private int countLine() {
-        try (Stream<String> stream = Files.lines(Paths.get(System.getProperty("user.dir"), FILENAME),
-                StandardCharsets.UTF_8)) {
-            return Math.toIntExact(stream.count());
-        } catch (IOException e) {
-            logger.info("countLine() - Unable to read file: ".concat(FILENAME));
-            return 0;
-        }
-    }
-
     private void removeHistoryFile(String filename) throws IOException {
         try {
-            Files.deleteIfExists(Path.of(System.getProperty("user.dir"), filename));
+            Files.deleteIfExists(FileLoaderService.getPath(filename));
             logger.info("file deleted: ".concat(filename));
         } catch (IOException e) {
             logger.error("removeHistory() - Unable to delete file: ".concat(filename));
@@ -126,7 +115,7 @@ public class HistoryService implements HistoryOperation {
     }
 
     private int getLastLogNumber() {
-        try (Stream<String> stream = Files.list(Path.of(System.getProperty("user.dir")))
+        try (Stream<String> stream = Files.list(FileLoaderService.getDirPath())
                 .map(path -> path.getFileName().toString())) {
             return stream
                     .filter(filename -> filename.contains(FILENAME))

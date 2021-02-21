@@ -27,7 +27,6 @@ public class HistoryLogMaker {
             stringBuffer.append(asText(operator));
             stringBuffer.append(asText(inputElements.peekLast()));
         }
-
         stringBuffer.append(asText("="));
         stringBuffer.append(asText(result));
         return stringBuffer.toString();
