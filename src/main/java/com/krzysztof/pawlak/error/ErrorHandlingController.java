@@ -30,8 +30,8 @@ public class ErrorHandlingController {
                 .body(exceptionResponse);
     }
 
-    @ExceptionHandler(FileNotExistException.class)
-    public ResponseEntity<ExceptionResponse> notFoundException(FileNotExistException e) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> notFoundException(ResourceNotFoundException e) {
         var exceptionResponse = new ExceptionResponse();
         exceptionResponse.setDescription(e.getDescription());
         return ResponseEntity
@@ -50,6 +50,15 @@ public class ErrorHandlingController {
 
     @ExceptionHandler(InputParseException.class)
     public ResponseEntity<ExceptionResponse> parseException(InputParseException e) {
+        var exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setDescription(e.getDescription());
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(UnprocessableException.class)
+    public ResponseEntity<ExceptionResponse> parseException(UnprocessableException e) {
         var exceptionResponse = new ExceptionResponse();
         exceptionResponse.setDescription(e.getDescription());
         return ResponseEntity

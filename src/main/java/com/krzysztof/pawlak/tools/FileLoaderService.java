@@ -1,6 +1,8 @@
 package com.krzysztof.pawlak.tools;
 
-import com.krzysztof.pawlak.error.FileNotExistException;
+import com.krzysztof.pawlak.error.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -15,15 +17,17 @@ import java.util.stream.Stream;
 public class FileLoaderService {
 
     public static final String CURRENT_DIR_WITH_LOGS_PROPERTY = "user.dir";
+    Logger logger = LoggerFactory.getLogger(FileLoaderService.class);
 
     public byte[] getFileAsByteArr(String filename) {
         if (!exists(filename)) {
-            throw new FileNotExistException();
+            throw new ResourceNotFoundException("File not exists.");
         }
         try {
             return Files.readAllBytes(getPath(filename));
         } catch (IOException e) {
-            throw new FileNotExistException();
+            logger.error("getFileAsByteArr() - no file: ".concat(filename));
+            throw new ResourceNotFoundException("File not exists.");
         }
     }
 

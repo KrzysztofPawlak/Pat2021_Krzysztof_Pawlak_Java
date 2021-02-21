@@ -1,6 +1,10 @@
 package com.krzysztof.pawlak.tools;
 
+import com.krzysztof.pawlak.error.ResourceNotFoundException;
+import com.krzysztof.pawlak.error.UnprocessableException;
 import com.krzysztof.pawlak.models.Range;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -16,6 +20,7 @@ public class RangeFileLogReader {
     private final Range range;
     private int currentPosition = 0;
     private final StringBuilder output = new StringBuilder();
+    Logger logger = LoggerFactory.getLogger(RangeFileLogReader.class);
 
     public RangeFileLogReader(List<String> files, Range range) {
         this.files = files;
@@ -25,14 +30,19 @@ public class RangeFileLogReader {
     public byte[] read() {
         List<String> historicalFiles = getFileListWithCurrentLogFileAtTheEnd();
         historicalFiles.stream().takeWhile(filename -> shouldAppend()).forEach(filename -> {
-            int linesInFile = FileLoaderService.countLine(filename);
+            final int linesInFile = FileLoaderService.countLine(filename);
             if (shouldSkipFileIfLessThenFrom(linesInFile)) {
                 currentPosition += linesInFile;
                 return;
             }
             appendFromFile(filename);
         });
-        return output.toString().getBytes();
+        final var outputAsString = output.toString();
+        if (outputAsString.isEmpty()) {
+            logger.info("read() - logs not found");
+            throw new ResourceNotFoundException("Logs not found!");
+        }
+        return outputAsString.getBytes();
     }
 
     private List<String> getFileListWithCurrentLogFileAtTheEnd() {
@@ -57,7 +67,8 @@ public class RangeFileLogReader {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.info("appendFromFile() - error during logs processing");
+            throw new UnprocessableException("Error during logs processing.");
         }
     }
 

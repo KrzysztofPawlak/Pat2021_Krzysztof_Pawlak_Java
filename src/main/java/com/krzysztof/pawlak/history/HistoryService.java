@@ -57,6 +57,7 @@ public class HistoryService implements HistoryOperation {
             linesAmount = 0;
             return true;
         } catch (IOException e) {
+            logger.error("removeHistory() - can't remove log files");
             return false;
         }
     }
@@ -85,7 +86,7 @@ public class HistoryService implements HistoryOperation {
                     .sorted()
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            logger.info("no files in history");
+            logger.info("getListOfFiles() - no files in history");
             return Collections.emptyList();
         }
     }
@@ -107,9 +108,9 @@ public class HistoryService implements HistoryOperation {
     private void removeHistoryFile(String filename) throws IOException {
         try {
             Files.deleteIfExists(FileLoaderService.getPath(filename));
-            logger.info("file deleted: ".concat(filename));
+            logger.info("removeHistoryFile() - file deleted: ".concat(filename));
         } catch (IOException e) {
-            logger.error("removeHistory() - Unable to delete file: ".concat(filename));
+            logger.error("removeHistoryFile() - Unable to delete file: ".concat(filename));
             throw e;
         }
     }
@@ -125,6 +126,7 @@ public class HistoryService implements HistoryOperation {
                     .max()
                     .orElse(0);
         } catch (IOException e) {
+            logger.info("getLastLogNumber() - no files");
             return 0;
         }
     }
