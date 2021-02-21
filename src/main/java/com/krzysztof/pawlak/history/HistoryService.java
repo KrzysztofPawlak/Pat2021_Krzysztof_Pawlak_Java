@@ -1,5 +1,6 @@
 package com.krzysztof.pawlak.history;
 
+import com.krzysztof.pawlak.models.Range;
 import com.krzysztof.pawlak.models.ValueContainer;
 import com.krzysztof.pawlak.tools.FileLoaderService;
 import org.slf4j.Logger;
@@ -69,7 +70,7 @@ public class HistoryService implements HistoryOperation {
     }
 
     @Override
-    public byte[] readByRange(int from, int to) {
+    public byte[] readByRange(Range range) {
         return new byte[0];
     }
 

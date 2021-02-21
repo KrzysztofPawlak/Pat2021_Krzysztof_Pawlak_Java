@@ -1,5 +1,6 @@
 package com.krzysztof.pawlak.history;
 
+import com.krzysztof.pawlak.models.Range;
 import com.krzysztof.pawlak.models.ValueContainer;
 import com.krzysztof.pawlak.models.db.DbHistory;
 
@@ -37,9 +38,9 @@ public class H2HistoryService implements HistoryOperation {
     }
 
     @Override
-    public byte[] readByRange(int from, int to) {
-        final var limit = calculateLimit(from, to);
-        final var offset = calculateOffset(from);
+    public byte[] readByRange(Range range) {
+        final var limit = calculateLimit(range.getFrom(), range.getTo());
+        final var offset = calculateOffset(range.getFrom());
         return historyRepository.findByLimitAndOffset(limit, offset).stream()
                 .map(DbHistory::getOperation)
                 .collect(Collectors.joining(System.lineSeparator()))
@@ -47,12 +48,15 @@ public class H2HistoryService implements HistoryOperation {
     }
     
     private int calculateLimit(int from, int to) {
-        final var shiftLimitStartedFromFirstElement = 1;
-        return Math.max((to - from) + shiftLimitStartedFromFirstElement, 0);
+        if (to == 0) {
+            return 0;
+        }
+        final var shiftToCompensateStartedFromFirstElement = 1;
+        return to - from + shiftToCompensateStartedFromFirstElement;
     }
     
     private int calculateOffset(int from) {
-        final var shiftToReturnFromAsEqual = 1;
-        return Math.max(from - shiftToReturnFromAsEqual, 0);
+        final var shiftToCompensateStartedFromFirstElement = 1;
+        return from - shiftToCompensateStartedFromFirstElement;
     }
 }

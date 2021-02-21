@@ -1,5 +1,6 @@
 package com.krzysztof.pawlak.history;
 
+import com.krzysztof.pawlak.models.Range;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
 
 import static org.springframework.http.MediaType.TEXT_PLAIN;
@@ -28,9 +30,8 @@ public class HistoryController {
     }
 
     @GetMapping
-    public HttpEntity<byte[]> read(@RequestParam int from,
-                                   @RequestParam(required = false, defaultValue = "0") int to) {
-        final var output = historyService.readByRange(from, to);
+    public HttpEntity<byte[]> read(@Valid Range range) {
+        final var output = historyService.readByRange(range);
         return ResponseEntity.ok()
                 .contentLength(output.length)
                 .contentType(new MediaType(TEXT_PLAIN, StandardCharsets.UTF_8))

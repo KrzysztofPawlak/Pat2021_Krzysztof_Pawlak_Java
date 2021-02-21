@@ -10,8 +10,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FeatureConfig {
 
-    @Autowired
-    private HistoryLogMaker historyLogMaker;
+    private final HistoryLogMaker historyLogMaker;
+
+    public FeatureConfig(HistoryLogMaker historyLogMaker) {
+        this.historyLogMaker = historyLogMaker;
+    }
 
     @Bean
     @ConditionalOnProperty(name = "H2_STORAGE_ENABLED", havingValue = "false")
