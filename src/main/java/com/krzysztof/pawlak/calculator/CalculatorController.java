@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Deque;
 
-import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM;
+import static org.springframework.http.MediaType.*;
 
 
 @Tag(name = "Calculator", description = "the Calculator API")
@@ -60,7 +60,7 @@ public class CalculatorController {
                     responseCode = "201",
                     description = "Created",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = {
                                     @ExampleObject(name = "Matrix Response", value = "[1 2; 3 4]"),
                                     @ExampleObject(name = "Vector Response", value = "[1 2]"),
@@ -96,7 +96,7 @@ public class CalculatorController {
                     responseCode = "201",
                     description = "Created",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = {
                                     @ExampleObject(name = "Matrix Response", value = "[1 2; 3 4]"),
                                     @ExampleObject(name = "Vector Response", value = "[1 2]"),
@@ -137,7 +137,7 @@ public class CalculatorController {
                     responseCode = "201",
                     description = "Created",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = {
                                     @ExampleObject(name = "Matrix Response", value = "[1 2; 3 4]"),
                                     @ExampleObject(name = "Vector Response", value = "[1 2]"),
@@ -166,7 +166,7 @@ public class CalculatorController {
                     responseCode = "201",
                     description = "Created",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = {
                                     @ExampleObject(name = "Matrix Response", value = "[1 2; 3 4]"),
                                     @ExampleObject(name = "Vector Response", value = "[1 2]"),
@@ -174,7 +174,7 @@ public class CalculatorController {
                             })),
             @ApiResponse(responseCode = "501", description = "Not implemented", content = @Content),
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content)})
-    @PostMapping("/exponential")
+    @PostMapping(value = "/exponential")
     @ResponseStatus(value = HttpStatus.CREATED)
     public Object exponential(@RequestBody @Valid Input input) {
         Deque<ValueContainer> values = inputConverter.convert(input);
@@ -196,7 +196,7 @@ public class CalculatorController {
                     responseCode = "201",
                     description = "Created",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = {
                                     @ExampleObject(name = "Matrix Response", value = "[1 2; 3 4]"),
                                     @ExampleObject(name = "Vector Response", value = "[1 2]"),
@@ -225,7 +225,7 @@ public class CalculatorController {
                     responseCode = "201",
                     description = "Created",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = {
                                     @ExampleObject(name = "Matrix Response", value = "[1 2; 3 4]"),
                                     @ExampleObject(name = "Vector Response", value = "[1 2]"),

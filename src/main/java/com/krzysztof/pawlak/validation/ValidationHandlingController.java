@@ -19,8 +19,13 @@ public class ValidationHandlingController {
         Map<String, String> errors = new HashMap<>();
         if (ex.getBindingResult().hasErrors()) {
             ex.getBindingResult().getAllErrors().forEach(error -> {
-                var fieldName = ((FieldError) error).getField();
-                var errorMessage = error.getDefaultMessage();
+                final var errorMessage = error.getDefaultMessage();
+                String fieldName;
+                if (error instanceof FieldError) {
+                    fieldName = ((FieldError) error).getField();
+                } else {
+                    fieldName = error.getObjectName();
+                }
                 errors.put(fieldName, errorMessage);
             });
             return errors;
