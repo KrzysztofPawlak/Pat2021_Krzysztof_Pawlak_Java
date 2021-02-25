@@ -1,4 +1,4 @@
-package com.krzysztof.pawlak.history;
+package com.krzysztof.pawlak.history.db;
 
 import com.krzysztof.pawlak.models.db.DbHistory;
 import org.springframework.stereotype.Repository;

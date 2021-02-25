@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.krzysztof.pawlak.history.HistoryService.FILENAME;
+import static com.krzysztof.pawlak.history.file.HistoryService.FILENAME;
 
 public class RangeFileLogReader {
 

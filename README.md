@@ -252,21 +252,42 @@ example: `localhost:8080/sqrt`
 
 # History
 
-## LIST OF FILES - GET
+Application supports store data in files or h2 database. You can change it in configuration file: `application.properties` by changing flag from true to false.
 
-example: `localhost:8080/history`
+`H2_STORAGE_ENABLED=true`
+
+## LOGS BY RANGE (from oldest)
+example: `localhost:8080/history?from=1&to=2`
+
+example: `localhost:8080/history?from=1` (to the current)
 
 ## LAST OPERATIONS - GET
 
 example: `localhost:8080/history/recent`
 
+## REMOVE ALL HISTORY - DELETE
+
+example: `localhost:8080/history`
+
+## The following endpoints are available only in database mode
+
+## LIST OF FILES - GET
+
+example: `localhost:8080/history/files`
+
 ## THE SPECIFIC FILE - GET
 
 example: `localhost:8080/history/historia_obliczen.txt`
 
-## REMOVE ALL HISTORY - DELETE
+# Additional endpoints (Spring Boot Actuator)
 
-example: `localhost:8080/history`
+endpoints: `localhost:8080/actuator`
+
+list of metrics: `localhost:8080/actuator/metrics`
+
+app version: `localhost:8080/actuator/info`
+
+status: `localhost:8080/actuator/health`
 
 # Documentation
 

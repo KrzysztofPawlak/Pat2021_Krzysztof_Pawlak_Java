@@ -1,4 +1,4 @@
-package com.krzysztof.pawlak.history;
+package com.krzysztof.pawlak.history.file;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

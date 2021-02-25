@@ -1,11 +1,17 @@
-package com.krzysztof.pawlak.history;
+package com.krzysztof.pawlak.history.db;
 
+import com.krzysztof.pawlak.history.HistoryLogMaker;
+import com.krzysztof.pawlak.history.HistoryOperation;
 import com.krzysztof.pawlak.models.Range;
 import com.krzysztof.pawlak.models.ValueContainer;
 import com.krzysztof.pawlak.models.db.DbHistory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.Deque;
 import java.util.stream.Collectors;
+
+import static com.krzysztof.pawlak.config.AppConfig.RECENT_HISTORICAL_DB_LOGS_LIMIT;
 
 public class H2HistoryService implements HistoryOperation {
 
@@ -31,7 +37,9 @@ public class H2HistoryService implements HistoryOperation {
 
     @Override
     public byte[] readRecent() {
-        return historyRepository.findAll().stream()
+        final var pageable = PageRequest.of(0, RECENT_HISTORICAL_DB_LOGS_LIMIT,
+                Sort.Direction.DESC, "id");
+        return historyRepository.findAll(pageable).stream()
                 .map(DbHistory::getOperation)
                 .collect(Collectors.joining(System.lineSeparator()))
                 .getBytes();

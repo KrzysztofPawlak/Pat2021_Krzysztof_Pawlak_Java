@@ -1,6 +1,9 @@
 package com.krzysztof.pawlak.config;
 
 import com.krzysztof.pawlak.history.*;
+import com.krzysztof.pawlak.history.file.HistoryService;
+import com.krzysztof.pawlak.history.db.H2HistoryService;
+import com.krzysztof.pawlak.history.db.HistoryRepository;
 import com.krzysztof.pawlak.tools.FileLoaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

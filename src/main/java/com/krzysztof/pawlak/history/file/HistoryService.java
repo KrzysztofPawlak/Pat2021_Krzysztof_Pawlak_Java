@@ -1,5 +1,7 @@
-package com.krzysztof.pawlak.history;
+package com.krzysztof.pawlak.history.file;
 
+import com.krzysztof.pawlak.history.HistoryLogMaker;
+import com.krzysztof.pawlak.history.HistoryOperation;
 import com.krzysztof.pawlak.models.Range;
 import com.krzysztof.pawlak.models.ValueContainer;
 import com.krzysztof.pawlak.tools.FileLoaderService;
