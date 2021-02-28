@@ -66,8 +66,7 @@ public class CalculatorController {
                                     @ExampleObject(name = "Vector Response", value = "[1 2]"),
                                     @ExampleObject(name = "Number Response", value = "1")})),
             @ApiResponse(responseCode = "501", description = "Not implemented", content = @Content),
-            @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content)
-    })
+            @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content)})
     @PostMapping("/add")
     @ResponseStatus(value = HttpStatus.CREATED)
     public String add(@RequestBody @Valid Input input) {
@@ -168,9 +167,7 @@ public class CalculatorController {
                     content = @Content(
                             mediaType = "*/*",
                             examples = {
-                                    @ExampleObject(name = "Matrix Response", value = "[1 2; 3 4]"),
-                                    @ExampleObject(name = "Vector Response", value = "[1 2]"),
-                                    @ExampleObject(name = "Number Response", value = "1")
+                                    @ExampleObject(name = "Number Response", value = "64")
                             })),
             @ApiResponse(responseCode = "501", description = "Not implemented", content = @Content),
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content)})
@@ -227,9 +224,7 @@ public class CalculatorController {
                     content = @Content(
                             mediaType = "*/*",
                             examples = {
-                                    @ExampleObject(name = "Matrix Response", value = "[1 2; 3 4]"),
-                                    @ExampleObject(name = "Vector Response", value = "[1 2]"),
-                                    @ExampleObject(name = "Number Response", value = "1")})),
+                                    @ExampleObject(name = "Number Response", value = "4")})),
             @ApiResponse(responseCode = "501", description = "Not implemented", content = @Content),
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content)})
     @PostMapping("/sqrt")

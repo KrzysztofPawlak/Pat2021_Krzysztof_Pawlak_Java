@@ -139,7 +139,7 @@ public class CalculatorSelector {
     }
 
     public byte[] makeFileInfo() {
-        StringBuilder stringBuffer = new StringBuilder();
+        final var stringBuffer = new StringBuilder();
         for (Map.Entry<CalculatorEnum, Calculator> entry : calculators.entrySet()) {
             stringBuffer.append(entry.getKey().getAcceptedInput());
             stringBuffer.append(System.lineSeparator());

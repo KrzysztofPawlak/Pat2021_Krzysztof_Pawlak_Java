@@ -36,11 +36,11 @@ public class InputParse {
                 final String[] firstRow = rows[0].split(" ");
                 final int rowsCount = rows.length;
                 final int columnsCount = clearEmptyElements(firstRow).length;
-                if (isVectorColumn(columnsCount)) {
-                    return parseToVectorColumn(rows);
-                }
                 if (isMatrix(rowsCount, columnsCount)) {
                     return parseToMatrix(rows, columnsCount);
+                }
+                if (isVectorColumn(columnsCount)) {
+                    return parseToVectorColumn(rows);
                 }
             }
             return BigDecimal.valueOf(Double.parseDouble(input));

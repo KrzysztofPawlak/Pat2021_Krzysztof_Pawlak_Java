@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static org.springframework.http.MediaType.TEXT_PLAIN;
+import static org.springframework.http.MediaType.*;
 
 @ConditionalOnProperty(name = "H2_STORAGE_ENABLED", havingValue = "false")
 @Tag(name = "History", description = "the History API")
@@ -53,7 +53,7 @@ public class HistoryFilesController {
                     responseCode = "200",
                     description = "OK",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = {
                                     @ExampleObject(name = "List of operations by specific file log",
                                             value = "4.0 ^ 3.0 = 64\n" +
@@ -65,7 +65,7 @@ public class HistoryFilesController {
                             mediaType = "application/json",
                             examples = {
                                     @ExampleObject(value = "{\"description\": \"File not exists.\"}")}))})
-    @GetMapping("/{filename}")
+    @GetMapping(value = "/{filename}")
     public HttpEntity<byte[]> getByFile(@PathVariable String filename) {
         var output = historyService.readSpecificHistoryFile(filename);
         return ResponseEntity.ok()

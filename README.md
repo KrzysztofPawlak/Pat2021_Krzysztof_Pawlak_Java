@@ -269,7 +269,7 @@ example: `localhost:8080/history/recent`
 
 example: `localhost:8080/history`
 
-## The following endpoints are available only in database mode
+## The following 2 endpoints are only available when logs as stored as files:
 
 ## LIST OF FILES - GET
 
