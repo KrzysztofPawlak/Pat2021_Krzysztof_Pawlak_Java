@@ -8,6 +8,7 @@ import com.krzysztof.pawlak.tools.FileLoaderService;
 import com.krzysztof.pawlak.tools.RangeFileLogReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 
 import static com.krzysztof.pawlak.config.AppConfig.LOG_ROTATION_LINE_LENGTH;
 
+@Service
 public class HistoryService implements HistoryOperation {
 
     public static final String FILENAME = "historia_obliczen.txt";
